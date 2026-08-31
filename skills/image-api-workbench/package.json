@@ -1,0 +1,39 @@
+{
+  "name": "image-api-workbench",
+  "version": "2.0.0",
+  "description": "Reproducible OpenAI Images API and compatible-gateway generation, editing, diagnostics, and artifact verification.",
+  "keywords": [
+    "openai",
+    "images-api",
+    "gpt-image",
+    "newapi",
+    "image-generation",
+    "image-editing",
+    "codex-skill"
+  ],
+  "author": "Wenliang Zeng",
+  "license": "UNLICENSED",
+  "bin": {
+    "image-api-workbench": "scripts/image_api_workbench.py",
+    "image-api-bilingual-review": "scripts/bilingual_contact_sheet.py"
+  },
+  "files": [
+    "SKILL.md",
+    "README.md",
+    "LICENSE",
+    "requirements.txt",
+    "agents/",
+    "references/",
+    "registry/",
+    "scripts/",
+    "security/",
+    "manifest.json"
+  ],
+  "scripts": {
+    "test": "python3 -m unittest discover -s tests -p 'test_*.py'",
+    "prepack": "python3 -m unittest discover -s tests -p 'test_*.py'"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

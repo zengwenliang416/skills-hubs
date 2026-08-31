@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "updated_at": "2026-08-31",
+  "skills": [
+    {
+      "name": "image-api-workbench",
+      "title": "Image API Workbench",
+      "version": "2.0.0",
+      "path": "skills/image-api-workbench",
+      "category": "media",
+      "runtime": "python>=3.9",
+      "npm": "image-api-workbench",
+      "license": "Proprietary",
+      "status": "active"
+    }
+  ]
+}

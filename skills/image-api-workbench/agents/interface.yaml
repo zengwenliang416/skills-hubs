@@ -1,0 +1,26 @@
+interface:
+  display_name: "Image API Workbench"
+  short_description: "Generate, edit, probe, and verify API images"
+  default_prompt: "Use $image-api-workbench to run a reproducible OpenAI Images API or compatible-gateway workflow."
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "openai"
+    - "claude"
+    - "generic"
+    - "vscode"
+  activation:
+    mode: "manual"
+    paths: []
+  execution:
+    context: "inline"
+    shell: "bash"
+  trust:
+    source_tier: "local"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow-metadata-only"
+  degradation:
+    openai: "native-skill-instructions-plus-local-cli"
+    claude: "neutral-source-plus-local-cli"
+    generic: "neutral-source-plus-python-cli"
+    vscode: "agent-skill-source-with-local-cli-notes"

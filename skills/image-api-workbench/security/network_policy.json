@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "default_policy": {
+    "https_only": true,
+    "custom_hosts": "explicit-cli-or-environment-only",
+    "redirects": "standard-library-default",
+    "secrets": "bearer-token-from-env-or-token-file",
+    "writes": "local-output-paths-only"
+  },
+  "scripts": {
+    "scripts/image_api_workbench.py": {
+      "purpose": "Call a user-selected OpenAI Images API compatible endpoint and download URL-based image responses when explicitly returned.",
+      "allowed_hosts": [
+        "127.0.0.1",
+        "localhost"
+      ],
+      "allowed_path_prefixes": [
+        "/v1/images/",
+        "/v1/models"
+      ],
+      "timeout_seconds": 1200,
+      "auth_mode": "bearer",
+      "custom_host_behavior": "allowed only through --base-url or reviewed environment configuration"
+    }
+  }
+}

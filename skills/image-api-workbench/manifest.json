@@ -1,0 +1,32 @@
+{
+  "name": "image-api-workbench",
+  "version": "2.0.0",
+  "owner": "Wenliang Zeng",
+  "updated_at": "2026-08-30",
+  "review_due": "2026-11-30",
+  "status": "active",
+  "maturity_tier": "library",
+  "lifecycle_stage": "library",
+  "context_budget_tier": "production",
+  "review_cadence": "quarterly",
+  "category": "media",
+  "complexity_tier": "moderate",
+  "license": "Proprietary",
+  "replaces": "newapi-imagegen",
+  "skill_ir_source": "skill-ir/examples/image-api-workbench.json",
+  "target_platforms": [
+    "openai",
+    "claude",
+    "generic",
+    "agent-skills-compatible",
+    "vscode"
+  ],
+  "factory_components": [
+    "references",
+    "scripts",
+    "evals",
+    "tests",
+    "security",
+    "reports"
+  ]
+}

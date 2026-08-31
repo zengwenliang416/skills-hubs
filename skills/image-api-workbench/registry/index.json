@@ -1,0 +1,22 @@
+{
+  "schema_version": "2.0",
+  "generated_at": "2026-08-30",
+  "package_count": 1,
+  "packages": [
+    {
+      "name": "image-api-workbench",
+      "version": "2.0.0",
+      "maturity": "library",
+      "owner": "Wenliang Zeng",
+      "targets": [
+        "openai",
+        "claude",
+        "generic",
+        "agent-skills-compatible",
+        "vscode"
+      ],
+      "package_metadata": "registry/packages/image-api-workbench.json",
+      "package_sha256": "8385e105b55833231e4136ee3dec22c804594ff8d2cc6a0b0619f6c295e5c2ed"
+    }
+  ]
+}
