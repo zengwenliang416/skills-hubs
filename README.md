@@ -10,6 +10,7 @@ Wenliang Zeng 常用且经过实际验证的 AI Agent Skills 集合。
 | Skill | 版本 | 用途 | 安装 |
 | --- | --- | --- | --- |
 | [image-api-workbench](skills/image-api-workbench) | 2.0.0 | 通过 OpenAI Images API 或兼容网关生成、编辑、探测并验证图片 | `npm install --global image-api-workbench` |
+| [amicro-universal-frontend-style](skills/amicro-universal-frontend-style) | 1.1.0 | 将作用域 Amicro 风格、Token 和安全微交互迁移到现有前端 | `npm install --global amicro-universal-frontend-style` |
 
 ## 安装到 Codex
 
@@ -20,13 +21,21 @@ git clone https://github.com/zengwenliang416/skills-hubs.git
 mkdir -p ~/.codex/skills
 cp -R skills-hubs/skills/image-api-workbench \
   ~/.codex/skills/image-api-workbench
+cp -R skills-hubs/skills/amicro-universal-frontend-style \
+  ~/.codex/skills/amicro-universal-frontend-style
 ```
 
-也可以只安装 `image-api-workbench` 的全局 CLI：
+也可以通过 npm 安装 Skill 提供的全局 CLI：
 
 ```bash
 npm install --global image-api-workbench
 image-api-workbench --version
+
+npm install --global amicro-universal-frontend-style
+amicro-inspect-frontend --help
+amicro-style-layer --help
+amicro-verify-style --help
+amicro-generate-tokens --help
 ```
 
 ## 收录原则

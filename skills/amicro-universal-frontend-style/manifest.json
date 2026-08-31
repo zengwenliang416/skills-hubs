@@ -1,0 +1,67 @@
+{
+  "name": "amicro-universal-frontend-style",
+  "version": "1.1.0",
+  "owner": "Wenliang Zeng",
+  "upstream_author": "Subhan-code",
+  "updated_at": "2026-08-31",
+  "review_due": "2026-11-30",
+  "status": "active",
+  "license": "MIT",
+  "maturity_tier": "library",
+  "lifecycle_stage": "library",
+  "context_budget_tier": "library",
+  "review_cadence": "quarterly",
+  "category": "frontend-design",
+  "complexity_tier": "complex",
+  "skill_archetype": "library",
+  "source_repository": "https://github.com/Subhan-code/Amicro--Micro-transitions-",
+  "support": "https://github.com/Subhan-code/Amicro--Micro-transitions-/issues",
+  "target_platforms": [
+    "openai",
+    "claude",
+    "generic",
+    "agent-skills-compatible",
+    "vscode"
+  ],
+  "supported_frontend_targets": [
+    "vanilla-html-css-js",
+    "react",
+    "nextjs",
+    "vue",
+    "nuxt",
+    "svelte",
+    "sveltekit",
+    "astro",
+    "tailwind-v3",
+    "tailwind-v4",
+    "css-modules",
+    "sass",
+    "css-in-js"
+  ],
+  "factory_components": [
+    "references",
+    "assets",
+    "scripts",
+    "examples",
+    "evals",
+    "tests",
+    "security"
+  ],
+  "permissions": {
+    "network": "not-required",
+    "filesystem_read": "target-scoped",
+    "filesystem_write": "explicit-only"
+  },
+  "verification": {
+    "commands": [
+      "python3 -m unittest discover -s tests -p test_*.py",
+      "python3 scripts/generate_token_assets.py .",
+      "python3 scripts/verify_amicro_style.py . --strict"
+    ],
+    "independent_human_blind_review": "missing evidence",
+    "production_adoption_telemetry": "missing evidence",
+    "world_class_claim_allowed": false
+  },
+  "skill_ir_source": "skill-ir/examples/amicro-universal-frontend-style.json",
+  "distribution_profile": "source-and-runtime"
+}

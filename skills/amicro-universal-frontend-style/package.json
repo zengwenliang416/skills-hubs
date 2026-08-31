@@ -1,0 +1,49 @@
+{
+  "name": "amicro-universal-frontend-style",
+  "version": "1.1.0",
+  "description": "Cross-framework Amicro-inspired frontend styling, scoped tokens, safe micro-transitions, inspection, installation, and verification tools.",
+  "keywords": [
+    "agent-skill",
+    "frontend-design",
+    "design-tokens",
+    "micro-interactions",
+    "accessibility",
+    "reduced-motion"
+  ],
+  "author": "Wenliang Zeng",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zengwenliang416/skills-hubs.git",
+    "directory": "skills/amicro-universal-frontend-style"
+  },
+  "homepage": "https://github.com/zengwenliang416/skills-hubs/tree/main/skills/amicro-universal-frontend-style",
+  "bin": {
+    "amicro-inspect-frontend": "scripts/inspect_frontend.py",
+    "amicro-style-layer": "scripts/install_style_layer.py",
+    "amicro-verify-style": "scripts/verify_amicro_style.py",
+    "amicro-generate-tokens": "scripts/generate_token_assets.py"
+  },
+  "files": [
+    "SKILL.md",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "THIRD_PARTY_NOTICES.md",
+    "VERSION",
+    "agents/",
+    "assets/",
+    "examples/",
+    "manifest.json",
+    "references/",
+    "scripts/*.py",
+    "security/"
+  ],
+  "scripts": {
+    "test": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -p 'test_*.py'",
+    "prepack": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -p 'test_*.py'"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

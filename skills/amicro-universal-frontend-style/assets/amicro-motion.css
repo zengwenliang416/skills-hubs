@@ -1,0 +1,301 @@
+/* Amicro Universal Frontend Style — opt-in motion utilities.
+ * Non-essential animation is opt-in only when the user has not requested
+ * reduced motion. State remains legible when animation is unavailable.
+ */
+
+.amicro-icon-swap {
+  display: inline-grid;
+  inline-size: 1em;
+  block-size: 1em;
+  place-items: center;
+}
+
+.amicro-icon-swap > *,
+.amicro-text-swap > * {
+  grid-area: 1 / 1;
+}
+
+.amicro-text-swap {
+  display: inline-grid;
+  overflow: clip;
+}
+
+.amicro-icon-swap > [data-active="false"],
+.amicro-text-swap > [data-active="false"] {
+  display: none;
+}
+
+.amicro-icon-swap > [data-active="true"],
+.amicro-text-swap > [data-active="true"] {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+.amicro-glare {
+  position: relative;
+  overflow: clip;
+  isolation: isolate;
+}
+
+.amicro-glare::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset-block: -80%;
+  inline-size: 38%;
+  inset-inline-start: -60%;
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.28), transparent);
+  transform: skewX(-18deg);
+  pointer-events: none;
+}
+
+.amicro-pulse-ring {
+  position: relative;
+  isolation: isolate;
+}
+
+.amicro-pulse-ring::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  border: 1px solid currentColor;
+  border-radius: inherit;
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .amicro-pressable,
+  .amicro-hover-lift,
+  .amicro-card[data-interactive="true"],
+  .amicro-button,
+  .amicro-icon-button,
+  .amicro-nav__item,
+  .amicro-switch,
+  .amicro-switch::after,
+  .amicro-input,
+  .amicro-select,
+  .amicro-textarea {
+    transition:
+      transform var(--amicro-duration-fast) var(--amicro-ease-emphasized),
+      background-color var(--amicro-duration-fast) var(--amicro-ease-standard),
+      border-color var(--amicro-duration-fast) var(--amicro-ease-standard),
+      color var(--amicro-duration-fast) var(--amicro-ease-standard),
+      opacity var(--amicro-duration-fast) var(--amicro-ease-standard);
+  }
+
+  .amicro-pressable:active,
+  .amicro-button:not(:disabled):not([aria-disabled="true"]):active,
+  .amicro-icon-button:not(:disabled):not([aria-disabled="true"]):active {
+    transform: scale(0.98);
+  }
+
+  [data-amicro-enter="fade-up"] {
+    animation: amicro-fade-up var(--amicro-duration-section) var(--amicro-ease-emphasized) both;
+  }
+
+  [data-amicro-enter="fade"] {
+    animation: amicro-fade var(--amicro-duration-card) var(--amicro-ease-standard) both;
+  }
+
+  [data-amicro-enter="zoom"] {
+    animation: amicro-zoom var(--amicro-duration-card) var(--amicro-ease-emphasized) both;
+  }
+
+  [data-amicro-enter="blur"] {
+    animation: amicro-blur-in var(--amicro-duration-section) var(--amicro-ease-emphasized) both;
+  }
+
+  [data-amicro-stagger] > * {
+    animation-delay: calc(var(--amicro-stagger-index, 0) * 45ms);
+  }
+
+  .amicro-icon-swap > [data-active="true"] {
+    animation: amicro-icon-in var(--amicro-duration-control) var(--amicro-ease-emphasized) both;
+  }
+
+  .amicro-text-swap > [data-active="true"] {
+    animation: amicro-text-in var(--amicro-duration-control) var(--amicro-ease-emphasized) both;
+  }
+
+  .amicro-pulse-ring[data-pulse="true"]::before {
+    animation: amicro-pulse-ring 520ms var(--amicro-ease-emphasized) both;
+  }
+
+  .amicro-shake[data-invalid="true"] {
+    animation: amicro-shake 320ms var(--amicro-ease-emphasized) both;
+  }
+
+  .amicro-success-pop[data-success="true"] {
+    animation: amicro-success-pop 420ms var(--amicro-ease-emphasized) both;
+  }
+
+  .amicro-skeleton {
+    animation: amicro-shimmer 1.4s linear infinite;
+  }
+
+  .amicro-route-fade-enter {
+    animation: amicro-route-fade-in var(--amicro-duration-route) var(--amicro-ease-emphasized) both;
+  }
+
+  .amicro-route-door-enter {
+    transform-origin: left center;
+    animation: amicro-route-door-in var(--amicro-duration-route) var(--amicro-ease-curtain) both;
+  }
+
+  :where([dir="rtl"]) .amicro-route-door-enter {
+    transform-origin: right center;
+  }
+
+  .amicro-route-iris-enter {
+    animation: amicro-route-iris-in var(--amicro-duration-route) var(--amicro-ease-emphasized) both;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine) {
+  .amicro-hover-lift:hover,
+  .amicro-card[data-interactive="true"]:hover {
+    transform: translateY(-2px) scale(1.006);
+  }
+
+  .amicro-pressable:hover,
+  .amicro-button:not(:disabled):not([aria-disabled="true"]):hover,
+  .amicro-icon-button:not(:disabled):not([aria-disabled="true"]):hover {
+    transform: translateY(-1px) scale(1.01);
+  }
+
+  .amicro-glare:hover::after,
+  .amicro-glare:focus-visible::after {
+    animation: amicro-glare-sweep 620ms var(--amicro-ease-emphasized) both;
+  }
+}
+
+@keyframes amicro-fade-up {
+  from { opacity: 0; transform: translateY(0.75rem); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes amicro-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes amicro-zoom {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes amicro-blur-in {
+  from { opacity: 0; transform: translateY(0.5rem); filter: blur(0.25rem); }
+  to { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+@keyframes amicro-icon-in {
+  from { opacity: 0; transform: scale(0.25); filter: blur(0.25rem); }
+  to { opacity: 1; transform: scale(1); filter: blur(0); }
+}
+
+@keyframes amicro-text-in {
+  from { opacity: 0; transform: translateY(0.65em); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes amicro-glare-sweep {
+  from { inset-inline-start: -60%; }
+  to { inset-inline-start: 130%; }
+}
+
+@keyframes amicro-pulse-ring {
+  0% { opacity: 0; transform: scale(0.92); }
+  25% { opacity: 0.45; }
+  100% { opacity: 0; transform: scale(1.24); }
+}
+
+@keyframes amicro-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-0.25rem); }
+  50% { transform: translateX(0.2rem); }
+  75% { transform: translateX(-0.1rem); }
+}
+
+@keyframes amicro-success-pop {
+  0% { transform: scale(0.96); }
+  45% { transform: scale(1.04); }
+  100% { transform: scale(1); }
+}
+
+@keyframes amicro-shimmer {
+  from { background-position: 120% 0; }
+  to { background-position: -120% 0; }
+}
+
+@keyframes amicro-route-fade-in {
+  from { opacity: 0; transform: translateY(0.5rem); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes amicro-route-door-in {
+  from { opacity: 0; transform: perspective(75rem) rotateY(-72deg) translateX(-8%); }
+  to { opacity: 1; transform: perspective(75rem) rotateY(0) translateX(0); }
+}
+
+@keyframes amicro-route-iris-in {
+  from { clip-path: circle(0% at 50% 50%); }
+  to { clip-path: circle(150% at 50% 50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where(.amicro, [data-amicro-scope], [data-amicro-root]) {
+    scroll-behavior: auto;
+  }
+
+  .amicro-pressable,
+  .amicro-hover-lift,
+  .amicro-card[data-interactive="true"],
+  .amicro-button,
+  .amicro-icon-button,
+  .amicro-nav__item,
+  .amicro-switch,
+  .amicro-switch::after,
+  .amicro-input,
+  .amicro-select,
+  .amicro-textarea {
+    transition: none !important;
+  }
+
+  .amicro-pressable:hover,
+  .amicro-hover-lift:hover,
+  .amicro-card[data-interactive="true"]:hover,
+  .amicro-button:hover,
+  .amicro-icon-button:hover,
+  .amicro-pressable:active,
+  .amicro-button:active,
+  .amicro-icon-button:active {
+    transform: none !important;
+  }
+
+  [data-amicro-enter],
+  [data-amicro-stagger] > *,
+  .amicro-icon-swap > [data-active],
+  .amicro-text-swap > [data-active],
+  .amicro-glare:hover::after,
+  .amicro-glare:focus-visible::after,
+  .amicro-pulse-ring[data-pulse="true"]::before,
+  .amicro-shake[data-invalid="true"],
+  .amicro-success-pop[data-success="true"],
+  .amicro-skeleton,
+  .amicro-route-fade-enter,
+  .amicro-route-door-enter,
+  .amicro-route-iris-enter {
+    animation: none !important;
+  }
+
+  .amicro-icon-swap > [data-active="true"],
+  .amicro-text-swap > [data-active="true"] {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+}

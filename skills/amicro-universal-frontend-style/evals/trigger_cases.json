@@ -1,0 +1,89 @@
+{
+  "recommended_threshold": 0.34,
+  "should_trigger": [
+    {
+      "text": "Apply Amicro-inspired cards, scoped tokens, and restrained micro-transitions to this React pricing page without changing its business logic.",
+      "family": "react_migration"
+    },
+    {
+      "text": "把这个 Vue 页面改成 Amicro 风格，保留品牌色和组件 API，不要新增动效依赖。",
+      "family": "vue_migration_cn"
+    },
+    {
+      "text": "Port the Amicro visual language into this Svelte dashboard and make every motion state safe for reduced motion.",
+      "family": "svelte_motion"
+    },
+    {
+      "text": "Audit this frontend repository, then implement scoped Amicro tokens, surfaces, focus states, and touch-safe controls.",
+      "family": "frontend_audit"
+    },
+    {
+      "text": "Use the existing Tailwind setup to add Amicro-style nested surfaces and tactile button feedback.",
+      "family": "tailwind_adaptation"
+    },
+    {
+      "text": "给这个原生 HTML 页面加 Amicro 微交互、明暗主题和 320px 响应式适配。",
+      "family": "vanilla_cn"
+    },
+    {
+      "text": "Create a reduced-motion-safe Amicro page transition using the motion library already installed in the app.",
+      "family": "page_transition"
+    },
+    {
+      "text": "Migrate one representative component to the Amicro design grammar and verify it in the browser.",
+      "family": "pilot_component"
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "text": "Explain what micro-interactions are without modifying any frontend.",
+      "family": "explanation"
+    },
+    {
+      "text": "Install the upstream Amicro package and do nothing else.",
+      "family": "install_only"
+    },
+    {
+      "text": "Design a new logo and brand identity for a company named Amicro.",
+      "family": "brand_identity"
+    },
+    {
+      "text": "Optimize this database query and backend API.",
+      "family": "backend"
+    },
+    {
+      "text": "Copy the Amicro website, logo, screenshots, and product copy exactly.",
+      "family": "verbatim_clone"
+    },
+    {
+      "text": "Summarize the Amicro README in Chinese.",
+      "family": "summary"
+    },
+    {
+      "text": "Review whether this page looks good, but do not implement changes or use a specific style.",
+      "family": "visual_critique"
+    },
+    {
+      "text": "Help me choose between React and Vue for a new backend-heavy application.",
+      "family": "framework_choice"
+    }
+  ],
+  "near_neighbor": [
+    {
+      "text": "Show three examples of Amicro components I might use later, without changing my project.",
+      "family": "examples_only"
+    },
+    {
+      "text": "Add one generic fade-in snippet to this element; I do not want a reusable style system.",
+      "family": "one_off_animation"
+    },
+    {
+      "text": "Create a broad brand moodboard where Amicro is only one of many references.",
+      "family": "moodboard"
+    },
+    {
+      "text": "Run an accessibility audit on this frontend without changing its visual language.",
+      "family": "accessibility_only"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.1",
+  "reviewed_at": "2026-08-31",
+  "capabilities": {
+    "network": {
+      "decision": "not-required",
+      "scope": "No runtime script performs network I/O."
+    },
+    "file_read": {
+      "decision": "approved",
+      "scope": "The explicitly selected target plus bundled Skill assets."
+    },
+    "file_write": {
+      "decision": "approved",
+      "reviewer": "Wenliang Zeng",
+      "scope": "Target-relative reports requested through --output; manifest-managed style assets after explicit --apply; and canonical token CSS/TypeScript regeneration inside the explicitly selected Skill directory after --write.",
+      "reason": "Inspection and verification need optional local reports; the installer needs bounded, user-authorized lifecycle writes.",
+      "expires_at": "2027-08-30",
+      "controls": [
+        "dry-run is the installer default",
+        "absolute paths and parent traversal are rejected",
+        "resolved symlink escapes are rejected",
+        "writes are atomic",
+        "update/uninstall use .amicro-install.json hashes",
+        "locally drifted managed files require explicit --force",
+        "no package manifest or dependency mutation"
+      ],
+      "evidence": [
+        "tests/test_scripts.py",
+        "references/migration-workflow.md"
+      ],
+      "target_enforcement": {
+        "openai": "Runtime metadata declares explicit-only writes; CLI resolvers enforce target containment and explicit --apply/--write.",
+        "claude": "Adapter metadata mirrors explicit-only writes; CLI resolvers enforce target containment and explicit --apply/--write.",
+        "generic": "Permission policy ships with the neutral Skill; CLI resolvers enforce target containment and explicit --apply/--write.",
+        "vscode": "Workspace trust plus adapter metadata; CLI resolvers enforce target containment and explicit --apply/--write."
+      }
+    }
+  }
+}

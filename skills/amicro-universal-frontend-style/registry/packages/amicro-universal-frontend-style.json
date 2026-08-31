@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "name": "amicro-universal-frontend-style",
+  "display_name": "Amicro Universal Frontend Style",
+  "version": "1.1.0",
+  "description": "Cross-framework Amicro-inspired frontend styling, scoped tokens, safe micro-transitions, inspection, installation, and verification tools.",
+  "license": "MIT",
+  "runtime": "python>=3.9",
+  "distribution": {
+    "npm": "amicro-universal-frontend-style",
+    "repository_path": "skills/amicro-universal-frontend-style"
+  },
+  "entrypoints": [
+    "SKILL.md",
+    "scripts/inspect_frontend.py",
+    "scripts/install_style_layer.py",
+    "scripts/verify_amicro_style.py"
+  ],
+  "permissions": {
+    "network": "not-required",
+    "filesystem_read": "target-scoped",
+    "filesystem_write": "explicit-only"
+  }
+}

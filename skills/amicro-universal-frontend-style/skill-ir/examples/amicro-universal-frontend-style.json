@@ -1,0 +1,114 @@
+{
+  "schema_version": "2.0.0",
+  "name": "amicro-universal-frontend-style",
+  "title": "Amicro Universal Frontend Style",
+  "job_to_be_done": "Apply or port the Amicro-inspired visual language, scoped design tokens, component surfaces, and restrained micro-transitions to an existing frontend. Use for React, Next.js, Vue, Nuxt, Svelte, Astro, Tailwind, CSS Modules, CSS-in-JS, or vanilla HTML/CSS/JS when the user asks for Amicro styling, tactile motion, a style migration, or an implementation audit. Preserve product behavior, content, component APIs, accessibility, branding, and the target stack. Exclude backend work, generic brand identity design, install-only support, visual critique without implementation, and verbatim cloning of Amicro product content.",
+  "trigger_surface": {
+    "description": "Apply or port the Amicro-inspired visual language, scoped design tokens, component surfaces, and restrained micro-transitions to an existing frontend. Use for React, Next.js, Vue, Nuxt, Svelte, Astro, Tailwind, CSS Modules, CSS-in-JS, or vanilla HTML/CSS/JS when the user asks for Amicro styling, tactile motion, a style migration, or an implementation audit. Preserve product behavior, content, component APIs, accessibility, branding, and the target stack. Exclude backend work, generic brand identity design, install-only support, visual critique without implementation, and verbatim cloning of Amicro product content.",
+    "should_trigger": [
+      "Apply Amicro-inspired cards, scoped tokens, and restrained micro-transitions to this React pricing page without changing its business logic.",
+      "把这个 Vue 页面改成 Amicro 风格，保留品牌色和组件 API，不要新增动效依赖。",
+      "Port the Amicro visual language into this Svelte dashboard and make every motion state safe for reduced motion.",
+      "Audit this frontend repository, then implement scoped Amicro tokens, surfaces, focus states, and touch-safe controls.",
+      "Use the existing Tailwind setup to add Amicro-style nested surfaces and tactile button feedback.",
+      "给这个原生 HTML 页面加 Amicro 微交互、明暗主题和 320px 响应式适配。",
+      "Create a reduced-motion-safe Amicro page transition using the motion library already installed in the app.",
+      "Migrate one representative component to the Amicro design grammar and verify it in the browser."
+    ],
+    "should_not_trigger": [
+      "Explain what micro-interactions are without modifying any frontend.",
+      "Install the upstream Amicro package and do nothing else.",
+      "Design a new logo and brand identity for a company named Amicro.",
+      "Optimize this database query and backend API.",
+      "Copy the Amicro website, logo, screenshots, and product copy exactly.",
+      "Summarize the Amicro README in Chinese.",
+      "Review whether this page looks good, but do not implement changes or use a specific style.",
+      "Help me choose between React and Vue for a new backend-heavy application."
+    ],
+    "edge_cases": [
+      "Show three examples of Amicro components I might use later, without changing my project.",
+      "Add one generic fade-in snippet to this element; I do not want a reusable style system.",
+      "Create a broad brand moodboard where Amicro is only one of many references.",
+      "Run an accessibility audit on this frontend without changing its visual language."
+    ]
+  },
+  "workflow": {
+    "steps": [
+      "Identify the target slice, framework, style entrypoint, theme model, existing motion library, checks, and contracts to preserve.",
+      "Inventory the target before editing:",
+      "Read `references/design-language.md` and `references/migration-workflow.md`. Add motion or framework references only when needed.",
+      "Pilot the smallest useful layer: token roles, surfaces, geometry, focus, component states, then optional motion.",
+      "Run the target project's format, type, lint, test, and build commands, followed by:",
+      "Render relevant states at 320, 360, 768, and 1440px. Check focus, touch, exact accessible names, themes, reduced motion, clipping, overflow, RTL when relevant, and runtime errors.",
+      "Report changed files, preserved contracts, checks actually run, rendered states actually inspected, and unresolved caveats."
+    ],
+    "decision_points": [],
+    "failure_modes": []
+  },
+  "resources": {
+    "references": [
+      "references/accessibility-performance.md",
+      "references/component-recipes.md",
+      "references/design-language.md",
+      "references/framework-adapters.md",
+      "references/migration-workflow.md",
+      "references/motion-language.md",
+      "references/quality-checklist.md",
+      "references/source-notes.md",
+      "references/v1.0.1-migration.md"
+    ],
+    "scripts": [
+      "scripts/_path_safety.py",
+      "scripts/generate_token_assets.py",
+      "scripts/inspect_frontend.py",
+      "scripts/install_style_layer.py",
+      "scripts/verify_amicro_style.py"
+    ],
+    "assets": [
+      "assets/README.md",
+      "assets/amicro-motion-presets.ts",
+      "assets/amicro-motion.css",
+      "assets/amicro-primitives.css",
+      "assets/amicro-tokens.css",
+      "assets/amicro-tokens.json",
+      "assets/amicro-tokens.ts"
+    ],
+    "reports": []
+  },
+  "eval_plan": {
+    "trigger": [
+      "evals/output/cases.jsonl",
+      "evals/packaging_expectations.json",
+      "evals/semantic_config.json",
+      "evals/trigger_cases.json"
+    ],
+    "output": [
+      "evals/output/cases.jsonl"
+    ],
+    "adversarial": [],
+    "baseline": "without_skill"
+  },
+  "risk": {
+    "output_risk": "low",
+    "execution_risk": "medium",
+    "trust_boundary": "team"
+  },
+  "governance": {
+    "owner": "Wenliang Zeng",
+    "maturity": "library",
+    "review_cadence": "quarterly",
+    "review_due": "2026-11-30"
+  },
+  "targets": [
+    "openai",
+    "claude",
+    "generic",
+    "agent-skills-compatible",
+    "vscode"
+  ],
+  "source_files": [
+    "SKILL.md",
+    "manifest.json",
+    "agents/interface.yaml"
+  ]
+}

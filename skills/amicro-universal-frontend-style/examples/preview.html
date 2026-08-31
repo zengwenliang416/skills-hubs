@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <title>Amicro Universal Frontend Style — Preview</title>
+  <link rel="stylesheet" href="../assets/amicro-tokens.css">
+  <link rel="stylesheet" href="../assets/amicro-primitives.css">
+  <link rel="stylesheet" href="../assets/amicro-motion.css">
+  <style>
+    html, body { margin: 0; min-height: 100%; inline-size: 100%; max-inline-size: 100%; }
+    body { overflow-x: clip; background: #121212; }
+    .demo { min-height: 100vh; }
+    .demo-topbar { position: sticky; z-index: 20; inset-block-start: 1rem; display: flex; min-inline-size: 0; justify-content: space-between; gap: 1rem; align-items: center; margin-block-end: clamp(4rem, 8vw, 7rem); }
+    .demo-brand { display: inline-flex; min-inline-size: 0; align-items: center; gap: .75rem; font-weight: 600; letter-spacing: -.02em; }
+    .demo-brand > :last-child { min-inline-size: 0; overflow-wrap: anywhere; }
+    .demo-mark { display: grid; inline-size: 2.25rem; block-size: 2.25rem; flex: 0 0 auto; place-items: center; border: 1px solid var(--amicro-border); border-radius: .8rem; background: var(--amicro-surface); box-shadow: var(--amicro-shadow-sm); }
+    .demo-hero { display: grid; min-inline-size: 0; grid-template-columns: minmax(0, 1.2fr) minmax(min(100%, 16rem), .8fr); gap: clamp(2rem, 7vw, 7rem); align-items: end; padding-block-end: clamp(4rem, 10vw, 8rem); }
+    .demo-hero > *, .demo-hero-copy { min-inline-size: 0; }
+    .demo-hero-copy { display: grid; gap: 1.5rem; }
+    .demo-hero-copy .amicro-copy { font-size: clamp(1rem, 1.8vw, 1.2rem); }
+    .demo-hero-panel { min-inline-size: 0; padding: 1rem; border-radius: 1.75rem; }
+    .demo-signal { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: .35rem; block-size: 10rem; align-items: end; padding: 1rem; }
+    .demo-signal span { display: block; inline-size: 100%; block-size: var(--signal-height, 50%); min-block-size: .75rem; border-radius: 999px; background: var(--amicro-text); opacity: var(--signal-opacity, .5); transform: none; transform-origin: bottom; }
+    .demo-toolbar { display: flex; min-inline-size: 0; justify-content: space-between; align-items: center; gap: 1rem; margin-block-end: 1.5rem; }
+    .demo-toolbar > * { min-inline-size: 0; }
+    .demo-card-visual { position: absolute; inset: 0; display: grid; place-items: center; }
+    .demo-orbit { position: relative; inline-size: min(9rem, 70%); aspect-ratio: 1; border: 1px solid var(--amicro-border-strong); border-radius: 50%; }
+    .demo-orbit::before, .demo-orbit::after { content: ""; position: absolute; inset: 18%; border: 1px solid var(--amicro-border); border-radius: 50%; }
+    .demo-orbit::after { inset: 38%; background: var(--amicro-accent); box-shadow: 0 0 0 10px color-mix(in srgb, var(--amicro-accent) 10%, transparent); }
+    .demo-dot { position: absolute; inset-block-start: 50%; inset-inline-start: 50%; inline-size: .75rem; block-size: .75rem; margin: -.375rem; border-radius: 50%; background: var(--amicro-text); transform: rotate(var(--angle)) translateX(4.5rem); transform-origin: center; }
+    .demo-lines { inline-size: min(82%, 15rem); min-inline-size: 0; display: grid; gap: .65rem; }
+    .demo-lines span { block-size: .55rem; border-radius: 999px; background: var(--amicro-border-strong); transform-origin: left; }
+    :where([dir="rtl"]) .demo-lines span { transform-origin: right; }
+    .demo-lines span:nth-child(1) { inline-size: 58%; }
+    .demo-lines span:nth-child(2) { inline-size: 92%; }
+    .demo-lines span:nth-child(3) { inline-size: 74%; }
+    .demo-copy-button[data-copied="true"] { color: var(--amicro-success); }
+    .demo-switch-row { display: flex; min-inline-size: 0; justify-content: space-between; gap: 1rem; align-items: center; padding: 1rem; border: 1px solid var(--amicro-border); border-radius: var(--amicro-radius-control); background: var(--amicro-stage); }
+    .demo-switch-row > :first-child { min-inline-size: 0; }
+    .demo-transition-stage { min-block-size: 14rem; perspective: 75rem; }
+    .demo-scene { display: grid; inline-size: min(88%, 18rem); max-inline-size: 100%; aspect-ratio: 16 / 10; place-items: center; border: 1px solid var(--amicro-border); border-radius: var(--amicro-radius-stage); background: var(--amicro-surface); box-shadow: var(--amicro-shadow-card); font-weight: 600; letter-spacing: -.02em; }
+    .demo-scene[data-scene="two"] { background: var(--amicro-accent); color: var(--amicro-accent-contrast); }
+    .demo-footer { padding-block: 5rem 2rem; color: var(--amicro-text-muted); font-size: .8125rem; }
+    .demo-only-sr { position: absolute; inline-size: 1px; block-size: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+    @media (prefers-reduced-motion: no-preference) {
+      .demo { transition: background-color 180ms ease, color 180ms ease; }
+      .demo-signal span { transform: scaleY(.58); animation: signal 2.8s var(--amicro-ease-emphasized) infinite alternate; animation-delay: calc(var(--i) * -120ms); }
+    }
+
+    @media (prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine) {
+      .amicro-card:hover .demo-orbit { animation: orbit-tilt 520ms var(--amicro-ease-emphasized) both; }
+      .amicro-card:hover .demo-lines span { animation: line-grow 420ms var(--amicro-ease-emphasized) both; animation-delay: calc(var(--line) * 45ms); }
+    }
+
+    @keyframes signal { from { transform: scaleY(.58); } to { transform: scaleY(1); } }
+    @keyframes orbit-tilt { 50% { transform: rotate(-5deg) scale(1.04); } 100% { transform: rotate(0) scale(1); } }
+    @keyframes line-grow { from { transform: scaleX(.72); opacity: .55; } to { transform: scaleX(1); opacity: 1; } }
+
+    @media (max-width: 46rem) {
+      .demo-hero { grid-template-columns: minmax(0, 1fr); }
+      .demo-form-layout { grid-template-columns: minmax(0, 1fr); }
+    }
+
+    @media (max-width: 37.5rem) {
+      .demo-topbar { position: static; flex-wrap: wrap; align-items: flex-start; margin-block-end: 3.5rem; }
+      .demo-toolbar { flex-direction: column; align-items: stretch; }
+      .demo-toolbar .amicro-nav { inline-size: 100%; }
+      .demo-switch-row { align-items: flex-start; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .demo, .demo-signal span, .amicro-card .demo-orbit, .amicro-card .demo-lines span { animation: none !important; transition: none !important; }
+      .demo-signal span { transform: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="amicro amicro-shell demo" data-amicro-root data-amicro-theme="dark" id="demoRoot">
+    <div class="amicro-container">
+      <header class="demo-topbar amicro-glass" style="padding:.55rem .65rem .55rem .8rem; border-radius:999px">
+        <div class="demo-brand"><span class="demo-mark" aria-hidden="true">A</span><span>Universal style layer</span></div>
+        <button class="amicro-icon-button amicro-pressable" type="button" id="themeButton" aria-label="Switch to light theme" title="Toggle theme">
+          <span class="amicro-icon-swap" aria-hidden="true">
+            <svg data-theme-icon="dark" data-active="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="17" height="17"><path d="M20.2 15.1A8.2 8.2 0 0 1 8.9 3.8 8.2 8.2 0 1 0 20.2 15Z"/></svg>
+            <svg data-theme-icon="light" data-active="false" hidden viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="17" height="17"><circle cx="12" cy="12" r="3.5"/><path d="M12 2v2.1M12 19.9V22M4.9 4.9l1.5 1.5M17.6 17.6l1.5 1.5M2 12h2.1M19.9 12H22M4.9 19.1l1.5-1.5M17.6 6.4l1.5-1.5"/></svg>
+          </span>
+        </button>
+      </header>
+
+      <section class="demo-hero">
+        <div class="demo-hero-copy" data-amicro-enter="fade-up">
+          <span class="amicro-eyebrow">Amicro · framework neutral</span>
+          <h1 class="amicro-display">Quiet surfaces. Tactile state.</h1>
+          <p class="amicro-copy">A scoped token, primitive, and motion layer that preserves the target product while adding Amicro-inspired hierarchy and micro-feedback.</p>
+          <div class="amicro-cluster">
+            <button class="amicro-button amicro-glare amicro-pulse-ring" data-variant="primary" type="button" id="primaryAction">
+              <span id="primaryActionLabel">Apply style layer</span>
+              <span class="amicro-icon-swap" aria-hidden="true">
+                <svg data-action-icon="ready" data-active="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                <svg data-action-icon="done" data-active="false" hidden viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="m5 12 4 4L19 6"/></svg>
+              </span>
+            </button>
+            <span class="amicro-chip">CSS first · no runtime dependency</span>
+            <span class="demo-only-sr" role="status" aria-live="polite" id="actionStatus"></span>
+          </div>
+        </div>
+        <aside class="demo-hero-panel amicro-glass" data-amicro-enter="zoom">
+          <div class="amicro-cluster" style="justify-content:space-between; margin-bottom:.75rem"><span class="amicro-card__title">Motion signal</span><span class="amicro-chip" data-tone="success">live</span></div>
+          <div class="amicro-stage demo-signal" aria-hidden="true">
+            <span style="--i:0;--signal-height:32%;--signal-opacity:.35"></span><span style="--i:1;--signal-height:68%;--signal-opacity:.52"></span><span style="--i:2;--signal-height:46%;--signal-opacity:.42"></span><span style="--i:3;--signal-height:82%;--signal-opacity:.68"></span><span style="--i:4;--signal-height:56%;--signal-opacity:.48"></span><span style="--i:5;--signal-height:92%;--signal-opacity:.78"></span><span style="--i:6;--signal-height:74%;--signal-opacity:.6"></span><span style="--i:7;--signal-height:42%;--signal-opacity:.4"></span>
+          </div>
+        </aside>
+      </section>
+
+      <section class="amicro-section" aria-labelledby="componentsTitle">
+        <div class="demo-toolbar">
+          <div class="amicro-stack" style="gap:.5rem"><span class="amicro-eyebrow">Primitives</span><h2 class="amicro-heading" id="componentsTitle">One grammar, several states.</h2></div>
+          <div class="amicro-nav" role="group" aria-label="Preview categories">
+            <button class="amicro-nav__item" type="button" data-active="true" aria-pressed="true">Cards</button>
+            <button class="amicro-nav__item" type="button" data-active="false" aria-pressed="false">Controls</button>
+            <button class="amicro-nav__item" type="button" data-active="false" aria-pressed="false">Motion</button>
+          </div>
+        </div>
+
+        <div class="amicro-grid" data-amicro-stagger>
+          <article class="amicro-card amicro-hover-lift" data-interactive="true" style="--amicro-stagger-index:0" data-amicro-enter="fade-up">
+            <div class="amicro-card__stage">
+              <div class="demo-card-visual" aria-hidden="true"><div class="demo-orbit"><span class="demo-dot" style="--angle:18deg"></span><span class="demo-dot" style="--angle:142deg"></span><span class="demo-dot" style="--angle:258deg"></span></div></div>
+            </div>
+            <footer class="amicro-card__footer"><div><div class="amicro-card__title">Nested stage</div><div class="amicro-card__meta">surface hierarchy</div></div><span class="amicro-chip">24 / 14</span></footer>
+          </article>
+
+          <article class="amicro-card amicro-hover-lift" data-interactive="true" style="--amicro-stagger-index:1" data-amicro-enter="fade-up">
+            <div class="amicro-card__stage">
+              <div class="demo-lines" aria-hidden="true"><span style="--line:0"></span><span style="--line:1"></span><span style="--line:2"></span></div>
+            </div>
+            <footer class="amicro-card__footer"><div><div class="amicro-card__title">Purposeful reveal</div><div class="amicro-card__meta">transform + opacity</div></div><button class="amicro-icon-button demo-copy-button" type="button" id="copyButton" aria-label="Copy token snippet" title="Copy token snippet"><span class="amicro-icon-swap" aria-hidden="true"><svg data-copy-icon="copy" data-active="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="16" height="16"><rect x="8" y="8" width="11" height="11" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg><svg data-copy-icon="done" data-active="false" hidden viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="m5 12 4 4L19 6"/></svg></span></button></footer>
+          </article>
+
+          <article class="amicro-card" style="--amicro-stagger-index:2" data-amicro-enter="fade-up">
+            <div class="amicro-card__stage" data-align="stretch" style="padding:1rem">
+              <div class="amicro-stack">
+                <label class="amicro-field" for="workspaceName"><span class="amicro-label">Workspace name</span><input class="amicro-input" id="workspaceName" name="workspaceName" value="Amicro layer" aria-describedby="nameHint"><span class="amicro-field__hint" id="nameHint">Scoped to this feature root.</span></label>
+                <div class="demo-switch-row"><div><div class="amicro-card__title">Reduced-noise mode</div><div class="amicro-card__meta">state remains visible</div></div><button class="amicro-switch" role="switch" aria-checked="true" type="button" id="demoSwitch"><span class="demo-only-sr">Reduced-noise mode</span></button></div>
+              </div>
+            </div>
+            <footer class="amicro-card__footer"><div><div class="amicro-card__title">Accessible controls</div><div class="amicro-card__meta">focus · keyboard · touch</div></div><span class="amicro-chip" data-tone="success">ready</span></footer>
+          </article>
+        </div>
+      </section>
+
+      <section class="amicro-section" aria-labelledby="transitionTitle">
+        <div class="amicro-stack" style="gap:.5rem"><span class="amicro-eyebrow">Page layer</span><h2 class="amicro-heading" id="transitionTitle">A transition is a metaphor, not a delay.</h2><p class="amicro-copy">The preview uses a short spatial door. Reduced-motion users receive an immediate scene swap.</p></div>
+        <article class="amicro-card" data-compact="true">
+          <div class="amicro-card__stage demo-transition-stage" id="transitionStage" aria-live="polite"><div class="demo-scene" data-scene="one" id="scene">Scene one</div></div>
+          <footer class="amicro-card__footer"><div><div class="amicro-card__title">Spatial door</div><div class="amicro-card__meta">650ms · interruptible</div></div><button class="amicro-button" type="button" id="sceneButton" aria-pressed="false">Switch scene <span aria-hidden="true">→</span></button></footer>
+        </article>
+      </section>
+
+      <footer class="demo-footer">Pure HTML, CSS, and JavaScript. No network font or animation dependency.</footer>
+    </div>
+    <div class="amicro-toast-region" aria-live="polite" aria-atomic="true" id="toastRegion"></div>
+  </main>
+
+  <script>
+    const root = document.getElementById('demoRoot');
+    const themeButton = document.getElementById('themeButton');
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    function setActive(selector, activeKey, attribute) {
+      document.querySelectorAll(selector).forEach((node) => {
+        const active = node.dataset[attribute] === activeKey;
+        node.dataset.active = String(active);
+        node.hidden = !active;
+        node.setAttribute('aria-hidden', String(!active));
+      });
+    }
+
+    function toast(message) {
+      const region = document.getElementById('toastRegion');
+      const item = document.createElement('div');
+      item.className = 'amicro-toast';
+      item.setAttribute('role', 'status');
+      item.textContent = message;
+      item.dataset.amicroEnter = 'fade-up';
+      region.append(item);
+      window.setTimeout(() => item.remove(), reduced.matches ? 1400 : 2600);
+    }
+
+    themeButton.addEventListener('click', () => {
+      const next = root.dataset.amicroTheme === 'dark' ? 'light' : 'dark';
+      root.dataset.amicroTheme = next;
+      document.body.style.background = next === 'dark' ? '#121212' : '#f8f9fa';
+      themeButton.setAttribute('aria-label', `Switch to ${next === 'dark' ? 'light' : 'dark'} theme`);
+      setActive('[data-theme-icon]', next, 'themeIcon');
+    });
+
+    document.getElementById('primaryAction').addEventListener('click', (event) => {
+      const button = event.currentTarget;
+      const label = document.getElementById('primaryActionLabel');
+      const status = document.getElementById('actionStatus');
+      button.dataset.pulse = 'true';
+      label.textContent = 'Applied';
+      status.textContent = 'Style layer applied to the preview.';
+      setActive('[data-action-icon]', 'done', 'actionIcon');
+      window.setTimeout(() => {
+        button.dataset.pulse = 'false';
+        label.textContent = 'Apply style layer';
+        setActive('[data-action-icon]', 'ready', 'actionIcon');
+      }, 1300);
+      toast('Style layer applied to the preview.');
+    });
+
+    document.getElementById('copyButton').addEventListener('click', async (event) => {
+      const button = event.currentTarget;
+      const value = '--amicro-ease-emphasized: cubic-bezier(.16, 1, .3, 1);';
+      try { await navigator.clipboard.writeText(value); } catch { /* Clipboard may be unavailable; visual and live feedback still work. */ }
+      button.dataset.copied = 'true';
+      button.setAttribute('aria-label', 'Token copied');
+      setActive('[data-copy-icon]', 'done', 'copyIcon');
+      window.setTimeout(() => {
+        button.dataset.copied = 'false';
+        button.setAttribute('aria-label', 'Copy token snippet');
+        setActive('[data-copy-icon]', 'copy', 'copyIcon');
+      }, 1200);
+      toast('Token snippet copied.');
+    });
+
+    document.getElementById('demoSwitch').addEventListener('click', (event) => {
+      const button = event.currentTarget;
+      button.setAttribute('aria-checked', String(button.getAttribute('aria-checked') !== 'true'));
+    });
+
+    document.querySelectorAll('.amicro-nav__item').forEach((item) => item.addEventListener('click', () => {
+      document.querySelectorAll('.amicro-nav__item').forEach((node) => {
+        const active = node === item;
+        node.dataset.active = String(active);
+        node.setAttribute('aria-pressed', String(active));
+      });
+    }));
+
+    let sceneTwo = false;
+    document.getElementById('sceneButton').addEventListener('click', (event) => {
+      const current = document.getElementById('scene');
+      const next = current.cloneNode(true);
+      sceneTwo = !sceneTwo;
+      event.currentTarget.setAttribute('aria-pressed', String(sceneTwo));
+      next.id = 'scene-next';
+      next.dataset.scene = sceneTwo ? 'two' : 'one';
+      next.textContent = sceneTwo ? 'Scene two' : 'Scene one';
+      next.classList.remove('amicro-route-door-enter');
+      current.replaceWith(next);
+      next.id = 'scene';
+      if (!reduced.matches) requestAnimationFrame(() => next.classList.add('amicro-route-door-enter'));
+    });
+  </script>
+</body>
+</html>

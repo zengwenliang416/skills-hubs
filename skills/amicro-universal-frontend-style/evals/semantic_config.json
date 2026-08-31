@@ -1,0 +1,146 @@
+{
+  "fallback_positive_concepts": [
+    "amicro_style",
+    "frontend_implementation",
+    "motion_and_tokens"
+  ],
+  "positive_concepts": {
+    "amicro_style": {
+      "weight": 0.46,
+      "phrases": [
+        "amicro",
+        "amicro-inspired",
+        "amicro style",
+        "amicro visual language",
+        "amicro design grammar",
+        "amicro 风格",
+        "amicro 微交互"
+      ]
+    },
+    "frontend_implementation": {
+      "weight": 0.28,
+      "phrases": [
+        "frontend",
+        "page",
+        "component",
+        "repository",
+        "react",
+        "next.js",
+        "vue",
+        "nuxt",
+        "svelte",
+        "astro",
+        "tailwind",
+        "html",
+        "css",
+        "页面",
+        "组件",
+        "前端"
+      ]
+    },
+    "motion_and_tokens": {
+      "weight": 0.18,
+      "phrases": [
+        "design tokens",
+        "scoped tokens",
+        "micro-transitions",
+        "micro-interactions",
+        "reduced motion",
+        "motion",
+        "surfaces",
+        "focus states",
+        "page transition",
+        "设计 token",
+        "微交互",
+        "动效",
+        "明暗主题"
+      ]
+    },
+    "implementation_action": {
+      "weight": 0.12,
+      "phrases": [
+        "apply",
+        "port",
+        "implement",
+        "migrate",
+        "adapt",
+        "change",
+        "add",
+        "改成",
+        "迁移",
+        "实现",
+        "加"
+      ]
+    }
+  },
+  "negative_concepts": {
+    "backend_only": {
+      "weight": 0.65,
+      "exclusive": true,
+      "phrases": [
+        "backend",
+        "database query",
+        "api endpoint",
+        "后端",
+        "数据库"
+      ]
+    },
+    "install_only": {
+      "weight": 0.55,
+      "exclusive": true,
+      "phrases": [
+        "install only",
+        "install the upstream",
+        "do nothing else",
+        "只安装"
+      ]
+    },
+    "no_implementation": {
+      "weight": 0.5,
+      "exclusive": true,
+      "phrases": [
+        "without modifying",
+        "do not implement",
+        "without changing my project",
+        "只解释",
+        "不要修改",
+        "不要实现"
+      ]
+    },
+    "copy_verbatim": {
+      "weight": 0.65,
+      "exclusive": true,
+      "phrases": [
+        "copy exactly",
+        "clone verbatim",
+        "logo and screenshots",
+        "原样复制",
+        "一模一样复制"
+      ]
+    },
+    "brand_identity": {
+      "weight": 0.5,
+      "exclusive": true,
+      "phrases": [
+        "logo",
+        "brand identity",
+        "moodboard",
+        "品牌设计",
+        "品牌视觉"
+      ]
+    },
+    "summary_only": {
+      "weight": 0.65,
+      "exclusive": true,
+      "phrases": [
+        "summarize",
+        "summary",
+        "translate",
+        "translation",
+        "总结",
+        "摘要",
+        "翻译"
+      ]
+    }
+  }
+}

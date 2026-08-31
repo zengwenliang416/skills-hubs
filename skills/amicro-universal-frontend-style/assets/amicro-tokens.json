@@ -1,0 +1,383 @@
+{
+  "schema_version": "1.0",
+  "_meta": {
+    "name": "Amicro Universal Frontend Style Tokens",
+    "version": "1.0.1",
+    "canonical": true,
+    "scope": "framework-neutral CSS custom properties",
+    "generator": "scripts/generate_token_assets.py",
+    "source": "Amicro-inspired; see references/source-notes.md"
+  },
+  "variables": [
+    {
+      "name": "--amicro-font-sans",
+      "type": "fontFamily",
+      "value": "\"Outfit\", Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif"
+    },
+    {
+      "name": "--amicro-font-mono",
+      "type": "fontFamily",
+      "value": "\"SFMono-Regular\", Consolas, \"Liberation Mono\", monospace"
+    },
+    {
+      "name": "--amicro-page",
+      "type": "color",
+      "value": "#f8f9fa",
+      "dark": "#121212"
+    },
+    {
+      "name": "--amicro-surface",
+      "type": "color",
+      "value": "#ffffff",
+      "dark": "#181818"
+    },
+    {
+      "name": "--amicro-surface-raised",
+      "type": "color",
+      "value": "#ffffff",
+      "dark": "#1b1b1b"
+    },
+    {
+      "name": "--amicro-surface-hover",
+      "type": "color",
+      "value": "#f1f1f3",
+      "dark": "#202020"
+    },
+    {
+      "name": "--amicro-stage",
+      "type": "color",
+      "value": "#f4f4f6",
+      "dark": "#131313"
+    },
+    {
+      "name": "--amicro-text",
+      "type": "color",
+      "value": "#111111",
+      "dark": "#f5f5f5"
+    },
+    {
+      "name": "--amicro-text-soft",
+      "type": "color",
+      "value": "#3f3f46",
+      "dark": "#d4d4d8"
+    },
+    {
+      "name": "--amicro-text-muted",
+      "type": "color",
+      "value": "#6f6f6f",
+      "dark": "#8a8a8a"
+    },
+    {
+      "name": "--amicro-border",
+      "type": "color",
+      "value": "rgb(17 17 17 / 0.08)",
+      "dark": "rgb(255 255 255 / 0.06)"
+    },
+    {
+      "name": "--amicro-border-strong",
+      "type": "color",
+      "value": "rgb(17 17 17 / 0.16)",
+      "dark": "rgb(255 255 255 / 0.12)"
+    },
+    {
+      "name": "--amicro-overlay",
+      "type": "color",
+      "value": "rgb(17 17 17 / 0.52)",
+      "dark": "rgb(0 0 0 / 0.64)"
+    },
+    {
+      "name": "--amicro-glass",
+      "type": "color",
+      "value": "rgb(255 255 255 / 0.75)",
+      "dark": "rgb(20 20 20 / 0.75)"
+    },
+    {
+      "name": "--amicro-glass-opaque",
+      "type": "color",
+      "value": "#ffffff",
+      "dark": "#171717"
+    },
+    {
+      "name": "--amicro-accent",
+      "type": "color",
+      "value": "#171717",
+      "dark": "#f4f4f5"
+    },
+    {
+      "name": "--amicro-accent-contrast",
+      "type": "color",
+      "value": "#ffffff",
+      "dark": "#18181b"
+    },
+    {
+      "name": "--amicro-success",
+      "type": "color",
+      "value": "#197a45",
+      "dark": "#56d68b"
+    },
+    {
+      "name": "--amicro-warning",
+      "type": "color",
+      "value": "#9a6700",
+      "dark": "#f1c75b"
+    },
+    {
+      "name": "--amicro-danger",
+      "type": "color",
+      "value": "#b42318",
+      "dark": "#ff8a80"
+    },
+    {
+      "name": "--amicro-focus",
+      "type": "color",
+      "value": "#2563eb",
+      "dark": "#8bb4ff"
+    },
+    {
+      "name": "--amicro-space-1",
+      "type": "dimension",
+      "value": "0.25rem"
+    },
+    {
+      "name": "--amicro-space-2",
+      "type": "dimension",
+      "value": "0.5rem"
+    },
+    {
+      "name": "--amicro-space-3",
+      "type": "dimension",
+      "value": "0.75rem"
+    },
+    {
+      "name": "--amicro-space-4",
+      "type": "dimension",
+      "value": "1rem"
+    },
+    {
+      "name": "--amicro-space-5",
+      "type": "dimension",
+      "value": "1.25rem"
+    },
+    {
+      "name": "--amicro-space-6",
+      "type": "dimension",
+      "value": "1.5rem"
+    },
+    {
+      "name": "--amicro-space-8",
+      "type": "dimension",
+      "value": "2rem"
+    },
+    {
+      "name": "--amicro-space-10",
+      "type": "dimension",
+      "value": "2.5rem"
+    },
+    {
+      "name": "--amicro-space-12",
+      "type": "dimension",
+      "value": "3rem"
+    },
+    {
+      "name": "--amicro-space-16",
+      "type": "dimension",
+      "value": "4rem"
+    },
+    {
+      "name": "--amicro-space-20",
+      "type": "dimension",
+      "value": "5rem"
+    },
+    {
+      "name": "--amicro-space-24",
+      "type": "dimension",
+      "value": "6rem"
+    },
+    {
+      "name": "--amicro-radius-detail",
+      "type": "dimension",
+      "value": "0.5rem"
+    },
+    {
+      "name": "--amicro-radius-control",
+      "type": "dimension",
+      "value": "0.75rem"
+    },
+    {
+      "name": "--amicro-radius-stage",
+      "type": "color",
+      "value": "0.875rem"
+    },
+    {
+      "name": "--amicro-radius-panel",
+      "type": "dimension",
+      "value": "1.25rem"
+    },
+    {
+      "name": "--amicro-radius-card",
+      "type": "dimension",
+      "value": "1.5rem"
+    },
+    {
+      "name": "--amicro-radius-pill",
+      "type": "dimension",
+      "value": "999px"
+    },
+    {
+      "name": "--amicro-control-height-sm",
+      "type": "dimension",
+      "value": "2.25rem"
+    },
+    {
+      "name": "--amicro-control-height",
+      "type": "dimension",
+      "value": "2.75rem"
+    },
+    {
+      "name": "--amicro-hit-target",
+      "type": "dimension",
+      "value": "2.75rem"
+    },
+    {
+      "name": "--amicro-card-reference-width",
+      "type": "dimension",
+      "value": "20rem"
+    },
+    {
+      "name": "--amicro-card-reference-height",
+      "type": "dimension",
+      "value": "16.75rem"
+    },
+    {
+      "name": "--amicro-shadow-sm",
+      "type": "shadow",
+      "value": "0 1px 2px rgb(0 0 0 / 0.05)",
+      "dark": "0 1px 2px rgb(0 0 0 / 0.22)"
+    },
+    {
+      "name": "--amicro-shadow-card",
+      "type": "shadow",
+      "value": "0 1px 2px rgb(0 0 0 / 0.04), 0 18px 50px rgb(0 0 0 / 0.08)",
+      "dark": "0 1px 2px rgb(0 0 0 / 0.18), 0 22px 60px rgb(0 0 0 / 0.28)"
+    },
+    {
+      "name": "--amicro-shadow-float",
+      "type": "shadow",
+      "value": "0 24px 80px rgb(0 0 0 / 0.16)",
+      "dark": "0 28px 90px rgb(0 0 0 / 0.44)"
+    },
+    {
+      "name": "--amicro-ring",
+      "type": "shadow",
+      "value": "0 0 0 3px color-mix(in srgb, var(--amicro-focus) 28%, transparent)"
+    },
+    {
+      "name": "--amicro-duration-instant",
+      "type": "duration",
+      "value": "120ms"
+    },
+    {
+      "name": "--amicro-duration-fast",
+      "type": "duration",
+      "value": "180ms"
+    },
+    {
+      "name": "--amicro-duration-control",
+      "type": "duration",
+      "value": "240ms"
+    },
+    {
+      "name": "--amicro-duration-card",
+      "type": "duration",
+      "value": "320ms"
+    },
+    {
+      "name": "--amicro-duration-section",
+      "type": "duration",
+      "value": "480ms"
+    },
+    {
+      "name": "--amicro-duration-route",
+      "type": "duration",
+      "value": "650ms"
+    },
+    {
+      "name": "--amicro-ease-standard",
+      "type": "cubicBezier",
+      "value": "cubic-bezier(0.2, 0.8, 0.2, 1)"
+    },
+    {
+      "name": "--amicro-ease-emphasized",
+      "type": "cubicBezier",
+      "value": "cubic-bezier(0.16, 1, 0.3, 1)"
+    },
+    {
+      "name": "--amicro-ease-curtain",
+      "type": "cubicBezier",
+      "value": "cubic-bezier(0.83, 0, 0.17, 1)"
+    },
+    {
+      "name": "--amicro-font-size-xs",
+      "type": "dimension",
+      "value": "0.75rem"
+    },
+    {
+      "name": "--amicro-font-size-sm",
+      "type": "dimension",
+      "value": "0.8125rem"
+    },
+    {
+      "name": "--amicro-font-size-base",
+      "type": "dimension",
+      "value": "0.9375rem"
+    },
+    {
+      "name": "--amicro-font-size-lg",
+      "type": "dimension",
+      "value": "1.0625rem"
+    },
+    {
+      "name": "--amicro-font-size-xl",
+      "type": "dimension",
+      "value": "1.5rem"
+    },
+    {
+      "name": "--amicro-letter-tight",
+      "type": "dimension",
+      "value": "-0.02em"
+    },
+    {
+      "name": "--amicro-letter-tighter",
+      "type": "dimension",
+      "value": "-0.035em"
+    },
+    {
+      "name": "--amicro-line-compact",
+      "type": "number",
+      "value": "1.2"
+    },
+    {
+      "name": "--amicro-line-body",
+      "type": "number",
+      "value": "1.55"
+    }
+  ],
+  "motion_springs": {
+    "crisp": {
+      "stiffness": 600,
+      "damping": 25
+    },
+    "layout": {
+      "stiffness": 500,
+      "damping": 25
+    },
+    "gentle": {
+      "stiffness": 400,
+      "damping": 25
+    },
+    "ring": {
+      "stiffness": 600,
+      "damping": 15
+    }
+  }
+}

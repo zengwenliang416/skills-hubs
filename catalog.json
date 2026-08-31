@@ -12,6 +12,17 @@
       "npm": "image-api-workbench",
       "license": "Proprietary",
       "status": "active"
+    },
+    {
+      "name": "amicro-universal-frontend-style",
+      "title": "Amicro Universal Frontend Style",
+      "version": "1.1.0",
+      "path": "skills/amicro-universal-frontend-style",
+      "category": "frontend-design",
+      "runtime": "python>=3.9",
+      "npm": "amicro-universal-frontend-style",
+      "license": "MIT",
+      "status": "active"
     }
   ]
 }

@@ -1,0 +1,29 @@
+interface:
+  display_name: "Amicro Universal Frontend Style"
+  short_description: "Port scoped Amicro-inspired styling and motion into an existing frontend"
+  default_prompt: "Use $amicro-universal-frontend-style to inspect the target, preserve its contracts, implement the smallest scoped Amicro-inspired layer in the existing stack, verify project checks and rendered states, and report only evidence actually collected."
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "openai"
+    - "claude"
+    - "generic"
+    - "agent-skills-compatible"
+    - "vscode"
+  activation:
+    mode: "manual"
+    semantic_routing: "host-dependent"
+    explicit_invocation: "$amicro-universal-frontend-style"
+  execution:
+    context: "inline"
+    shell: "bash"
+  trust:
+    source_tier: "local"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow-metadata-only"
+  degradation:
+    openai: "metadata-adapter"
+    claude: "neutral-source-plus-adapter"
+    generic: "neutral-source"
+    agent-skills-compatible: "neutral-source"
+    vscode: "agent-skills-source-with-vscode-notes"
