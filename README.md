@@ -9,7 +9,7 @@ Wenliang Zeng 常用且经过实际验证的 AI Agent Skills 集合。
 
 | Skill | 版本 | 用途 | 安装 |
 | --- | --- | --- | --- |
-| [image-api-workbench](skills/image-api-workbench) | 2.0.0 | 通过 OpenAI Images API 或兼容网关生成、编辑、探测并验证图片 | `npm install --global image-api-workbench` |
+| [image-api-workbench](skills/image-api-workbench) | 2.0.1 | 通过 OpenAI Images API 或兼容网关生成、编辑、探测并验证图片 | `npm install --global image-api-workbench` |
 | [amicro-universal-frontend-style](skills/amicro-universal-frontend-style) | 1.1.0 | 将作用域 Amicro 风格、Token 和安全微交互迁移到现有前端 | `npm install --global amicro-universal-frontend-style` |
 
 ## 安装到 Codex

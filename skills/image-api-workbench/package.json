@@ -1,6 +1,6 @@
 {
   "name": "image-api-workbench",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Reproducible OpenAI Images API and compatible-gateway generation, editing, diagnostics, and artifact verification.",
   "keywords": [
     "openai",

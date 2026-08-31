@@ -21,7 +21,7 @@ from urllib.parse import urlparse
 from urllib.request import Request, urlopen
 
 
-VERSION = "2.0.0"
+VERSION = "2.0.1"
 SCRIPT_INTERFACE = "cli"
 DEFAULT_BASE_URL = "http://127.0.0.1:3000/v1"
 DEFAULT_TOKEN_FILE = Path("/root/.openclaw/new-api.token")
