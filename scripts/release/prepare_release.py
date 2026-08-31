@@ -78,7 +78,25 @@ def validate_git(tag: str) -> str:
     if tag_sha != head:
         raise ReleaseError(f"tag {tag} does not resolve to HEAD {head}")
 
-    run(["git", "merge-base", "--is-ancestor", head, "origin/main"])
+    # Tag-triggered clones may not create a remote-tracking main reference.
+    run(
+        [
+            "git",
+            "fetch",
+            "--no-tags",
+            "origin",
+            "main:refs/remotes/origin/main",
+        ]
+    )
+    run(
+        [
+            "git",
+            "merge-base",
+            "--is-ancestor",
+            head,
+            "refs/remotes/origin/main",
+        ]
+    )
     return head
 
 
