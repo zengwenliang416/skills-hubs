@@ -13,6 +13,12 @@
   ],
   "author": "Wenliang Zeng",
   "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zengwenliang416/skills-hubs.git",
+    "directory": "skills/image-api-workbench"
+  },
+  "homepage": "https://github.com/zengwenliang416/skills-hubs/tree/main/skills/image-api-workbench",
   "bin": {
     "image-api-workbench": "scripts/image_api_workbench.py",
     "image-api-bilingual-review": "scripts/bilingual_contact_sheet.py"

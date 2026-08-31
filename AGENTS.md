@@ -22,3 +22,13 @@
 - Run a credential-pattern scan over staged files.
 - For npm-distributed Skills, run `npm pack --dry-run --json` and verify the
   file allowlist before publishing.
+
+## Release
+
+- Do not run `npm publish` directly from a developer workstation.
+- Publish versions only through the Woodpecker pipelines on the
+  `production-80` agent.
+- Use annotated tags in `<skill-name>@<semver>` format.
+- Require tag, catalog, package, manifest, and registry versions to match.
+- Keep npm and GitHub publishing credentials only in repository-scoped
+  Woodpecker secrets; never write their values to files, logs, or Git.

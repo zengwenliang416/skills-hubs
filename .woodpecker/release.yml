@@ -1,0 +1,88 @@
+depends_on:
+  - quality
+
+clone:
+  git:
+    image: woodpeckerci/plugin-git:2.9.2@sha256:a36586dfe77e9c5d9b5bff3ad37f18158eb12036aa9e9908e2e813ee6029573e
+    settings:
+      partial: false
+      depth: 0
+
+labels:
+  location: production-80
+  platform: linux/amd64
+  backend: docker
+
+when:
+  - event: tag
+
+concurrency:
+  limit: 1
+  group: skills-hubs-release
+
+steps:
+  - name: prepare-release
+    image: node:24-bookworm@sha256:107ceb6ad85808049dccef12414bf17b08eceb299eaf755c0339dc5fc8958d6b
+    environment:
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONIOENCODING: utf-8
+      PYTHONUTF8: "1"
+      NPM_CONFIG_AUDIT: "false"
+      NPM_CONFIG_FUND: "false"
+      NPM_CONFIG_UPDATE_NOTIFIER: "false"
+    commands:
+      - apt-get update
+      - apt-get install -y --no-install-recommends ca-certificates git python3
+      - python3 scripts/release/prepare_release.py --tag "$CI_COMMIT_TAG" --output-dir .release
+
+  - name: publish-npm
+    image: node:24-bookworm@sha256:107ceb6ad85808049dccef12414bf17b08eceb299eaf755c0339dc5fc8958d6b
+    environment:
+      NODE_AUTH_TOKEN:
+        from_secret: npm_publish_token
+      NPM_CONFIG_AUDIT: "false"
+      NPM_CONFIG_FUND: "false"
+      NPM_CONFIG_UPDATE_NOTIFIER: "false"
+    commands:
+      - apt-get update
+      - apt-get install -y --no-install-recommends ca-certificates python3
+      - python3 scripts/release/publish_npm.py --manifest .release/release-manifest.json
+
+  - name: reject-existing-github-release
+    image: curlimages/curl:8.16.0@sha256:463eaf6072688fe96ac64fa623fe73e1dbe25d8ad6c34404a669ad3ce1f104b6
+    entrypoint: /bin/sh
+    environment:
+      GH_TOKEN:
+        from_secret: github_release_token
+    commands:
+      - set -eu
+      - test -n "$GH_TOKEN"
+      - |
+        status="$(
+          curl --silent --show-error \
+            --output /tmp/existing-release.json \
+            --write-out '%{http_code}' \
+            --header 'Accept: application/vnd.github+json' \
+            --header "Authorization: Bearer $GH_TOKEN" \
+            --header 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/$CI_REPO/releases/tags/$CI_COMMIT_TAG"
+        )"
+        case "$status" in
+          404) ;;
+          200) echo "Refusing to modify existing GitHub Release $CI_COMMIT_TAG"; exit 1 ;;
+          *) echo "GitHub release preflight failed with HTTP $status"; exit 1 ;;
+        esac
+
+  - name: publish-github-release
+    image: woodpeckerci/plugin-release:0.3.1@sha256:3fa3a8de080151bbe5c9647b31793a46cc2cfc489741bf48835265edb85ca739
+    settings:
+      api_key:
+        from_secret: github_release_token
+      files:
+        - .release/*.tgz
+        - .release/*.sha256
+        - .release/release-manifest.json
+      file_exists: fail
+      prerelease: false
+      title: "${CI_COMMIT_TAG}"
+      note: .release/RELEASE_NOTES.md

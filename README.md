@@ -37,6 +37,23 @@ image-api-workbench --version
 - 每个 Skill 必须声明自己的许可证和安全边界。
 - 发布前至少运行该 Skill 自带的测试和安装冒烟检查。
 
+## 版本发布
+
+正式版本统一通过 80 服务器上的 Woodpecker 流水线发布，不从开发机直接执行
+`npm publish`。
+
+发布 tag 使用 `<skill-name>@<semver>` 格式，例如：
+
+```bash
+git tag -a 'image-api-workbench@2.0.1' \
+  -m 'release: image-api-workbench 2.0.1'
+git push origin 'image-api-workbench@2.0.1'
+```
+
+流水线会校验 tag、`catalog.json` 和 Skill 元数据版本完全一致，重新运行测试，
+生成并校验 npm tarball，然后幂等发布 npm 包并创建 GitHub Release。完整流程和
+Secret 边界见 [发布指南](docs/RELEASING.md)。
+
 ## 许可证
 
 本仓库不使用统一许可证。每个 Skill 的授权范围以其目录中的 `LICENSE`
