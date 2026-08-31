@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import os
 import subprocess
 import unittest
 from pathlib import Path
@@ -53,11 +54,14 @@ class GitValidationTests(unittest.TestCase):
     def test_fetches_origin_main_before_ancestry_check(self) -> None:
         commit = "9d082ff61bd33a59c56a7ba5b5f97394d91336f8"
         completed = subprocess.CompletedProcess([], 0, stdout=f"{commit}\n")
-        with mock.patch.object(
-            prepare,
-            "run",
-            side_effect=[completed, completed, completed, completed],
-        ) as run_mock:
+        with (
+            mock.patch.dict(os.environ, {"CI_COMMIT_SHA": commit}),
+            mock.patch.object(
+                prepare,
+                "run",
+                side_effect=[completed, completed, completed, completed],
+            ) as run_mock,
+        ):
             self.assertEqual(
                 prepare.validate_git("amicro-universal-frontend-style@1.1.0"),
                 commit,
