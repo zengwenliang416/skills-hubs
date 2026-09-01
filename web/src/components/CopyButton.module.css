@@ -1,0 +1,26 @@
+.root {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+}
+
+.failed {
+  color: var(--hub-danger);
+}
+
+.icon {
+  display: block;
+}
+
+/* Visually hidden but exposed to assistive tech as a live region. */
+.visuallyHidden {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}

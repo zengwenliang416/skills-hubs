@@ -28,6 +28,10 @@ export interface Skill {
   quick_start: QuickStart
   documentation_url: string
   repository_url: string
+  /** Optional link to the skill's test suite. */
+  tests_url?: string
+  /** Optional link to the skill's security policy. */
+  security_notes_url?: string
 }
 
 export interface Catalog {

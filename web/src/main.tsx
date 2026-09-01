@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 
 import App from './App'
 import './styles/amicro-tokens.css'
+import './styles/hub-tokens.css'
 import './styles/base.css'
 
 const container = document.getElementById('root')

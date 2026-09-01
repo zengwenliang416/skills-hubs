@@ -1,0 +1,36 @@
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--amicro-space-3);
+  padding: var(--amicro-space-12) var(--amicro-space-6);
+  text-align: center;
+  border: 1px dashed var(--hub-border-strong);
+  border-radius: var(--amicro-radius-card);
+  background: var(--hub-surface);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--amicro-font-size-lg);
+  font-weight: 600;
+  letter-spacing: var(--amicro-letter-tight);
+  color: var(--hub-text);
+}
+
+.description {
+  max-inline-size: 32rem;
+  margin: 0;
+  font-size: var(--amicro-font-size-base);
+  line-height: var(--amicro-line-body);
+  color: var(--hub-text-muted);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--amicro-space-2);
+  margin-block-start: var(--amicro-space-2);
+}

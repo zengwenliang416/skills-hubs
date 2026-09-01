@@ -1,0 +1,31 @@
+/*
+ * Semantic role layer over the generated Amicro tokens.
+ * Maps hub-level role names onto existing --amicro-* values only; no new
+ * color values live here, and amicro-tokens.css stays the single source of
+ * truth. Dark-theme overrides resolve automatically through the var() chain.
+ */
+:where(.amicro, [data-amicro-scope], [data-amicro-root]) {
+  /* Actions */
+  --hub-action: var(--amicro-accent);
+  --hub-action-contrast: var(--amicro-accent-contrast);
+
+  /* Status roles */
+  --hub-success: var(--amicro-success);
+  --hub-warning: var(--amicro-warning);
+  --hub-danger: var(--amicro-danger);
+  --hub-info: var(--amicro-focus);
+
+  /* Surfaces */
+  --hub-surface: var(--amicro-surface);
+  --hub-surface-raised: var(--amicro-surface-raised);
+  --hub-surface-hover: var(--amicro-surface-hover);
+
+  /* Text roles */
+  --hub-text: var(--amicro-text);
+  --hub-text-soft: var(--amicro-text-soft);
+  --hub-text-muted: var(--amicro-text-muted);
+
+  /* Borders */
+  --hub-border: var(--amicro-border);
+  --hub-border-strong: var(--amicro-border-strong);
+}

@@ -1,0 +1,26 @@
+.codeBlock {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--amicro-space-2);
+  padding: var(--amicro-space-3) var(--amicro-space-4);
+  border: 1px solid var(--hub-border);
+  border-radius: var(--amicro-radius-control);
+  background: var(--hub-surface);
+}
+
+.pre {
+  flex: 1;
+  min-inline-size: 0;
+  margin: 0;
+  overflow-x: auto;
+  font-family: var(--amicro-font-mono);
+  font-size: var(--amicro-font-size-sm);
+  line-height: var(--amicro-line-body);
+  color: var(--hub-text);
+  white-space: pre;
+}
+
+.copy {
+  flex: none;
+}

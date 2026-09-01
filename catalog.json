@@ -41,7 +41,9 @@
         "command": "image-api-workbench --prompt \"A clean editorial AI infrastructure cover, no text, no logos\" --size 1536x864 --quality high --out ./artifacts/cover.png --dry-run"
       },
       "documentation_url": "https://github.com/zengwenliang416/skills-hubs/blob/main/skills/image-api-workbench/README.md",
-      "repository_url": "https://github.com/zengwenliang416/skills-hubs/tree/main/skills/image-api-workbench"
+      "repository_url": "https://github.com/zengwenliang416/skills-hubs/tree/main/skills/image-api-workbench",
+      "tests_url": "https://github.com/zengwenliang416/skills-hubs/tree/main/skills/image-api-workbench/tests",
+      "security_notes_url": "https://github.com/zengwenliang416/skills-hubs/tree/main/skills/image-api-workbench/security"
     },
     {
       "name": "amicro-universal-frontend-style",
@@ -76,7 +78,9 @@
         "command": "$amicro-universal-frontend-style 把 src/pages/pricing.tsx 改成 Amicro 风格，保留现有品牌色、文案、组件 API 和业务逻辑。"
       },
       "documentation_url": "https://github.com/zengwenliang416/skills-hubs/blob/main/skills/amicro-universal-frontend-style/README.md",
-      "repository_url": "https://github.com/zengwenliang416/skills-hubs/tree/main/skills/amicro-universal-frontend-style"
+      "repository_url": "https://github.com/zengwenliang416/skills-hubs/tree/main/skills/amicro-universal-frontend-style",
+      "tests_url": "https://github.com/zengwenliang416/skills-hubs/tree/main/skills/amicro-universal-frontend-style/tests",
+      "security_notes_url": "https://github.com/zengwenliang416/skills-hubs/tree/main/skills/amicro-universal-frontend-style/security"
     }
   ]
 }
