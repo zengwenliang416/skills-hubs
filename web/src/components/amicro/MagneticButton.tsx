@@ -4,6 +4,7 @@ import { useRef } from 'react'
 import type { ReactNode } from 'react'
 
 import { useFinePointerMotion } from '@/lib/useFinePointerMotion'
+import { springs } from '@/lib/springs'
 
 import styles from './MagneticButton.module.css'
 
@@ -31,9 +32,9 @@ export function MagneticButton({
   const enabled = useFinePointerMotion()
   const ref = useRef<HTMLDivElement>(null)
 
-  // Original registry spring config: { stiffness: 150, damping: 15, mass: 0.6 }.
-  const x = useSpring(0, { stiffness: 150, damping: 15, mass: 0.6 })
-  const y = useSpring(0, { stiffness: 150, damping: 15, mass: 0.6 })
+  // Shared magnetic spring preset (registry: { stiffness: 150, damping: 15, mass: 0.6 }).
+  const x = useSpring(0, springs.magnetic)
+  const y = useSpring(0, springs.magnetic)
 
   const classes = [styles.root, className].filter(Boolean).join(' ')
 

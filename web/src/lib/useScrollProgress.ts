@@ -10,7 +10,10 @@ export function useScrollProgress(ref?: RefObject<HTMLElement | null>): number {
   const [progress, setProgress] = useState(0)
 
   useEffect(() => {
-    const handleScroll = () => {
+    let pendingFrame = 0
+
+    const readProgress = () => {
+      pendingFrame = 0
       if (ref?.current) {
         const element = ref.current
         const totalHeight = element.scrollHeight - element.clientHeight
@@ -21,12 +24,22 @@ export function useScrollProgress(ref?: RefObject<HTMLElement | null>): number {
       }
     }
 
+    // Throttle scroll events to one state update per animation frame.
+    const handleScroll = () => {
+      if (pendingFrame === 0) {
+        pendingFrame = window.requestAnimationFrame(readProgress)
+      }
+    }
+
     const target: HTMLElement | Window = ref?.current ?? window
     target.addEventListener('scroll', handleScroll, { passive: true })
-    handleScroll()
+    readProgress()
 
     return () => {
       target.removeEventListener('scroll', handleScroll)
+      if (pendingFrame !== 0) {
+        window.cancelAnimationFrame(pendingFrame)
+      }
     }
   }, [ref])
 

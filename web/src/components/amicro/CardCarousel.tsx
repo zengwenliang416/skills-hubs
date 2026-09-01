@@ -4,6 +4,7 @@ import { useState } from 'react'
 import type { ReactNode } from 'react'
 
 import { IconButton } from '@/components/IconButton'
+import { springs } from '@/lib/springs'
 import { useMediaQuery } from '@/lib/useMediaQuery'
 
 import styles from './CardCarousel.module.css'
@@ -49,17 +50,46 @@ export function CardCarousel({
   const reducedMotion = useReducedMotion()
   const compact = useMediaQuery('(max-width: 40rem)')
 
-  const transition = reducedMotion
-    ? { duration: 0 }
-    : { type: 'spring' as const, stiffness: 260, damping: 22 }
+  // Reduced motion keeps every control working but switches instantly;
+  // otherwise the shared card slide spring (registry: stiffness 260,
+  // damping 22) drives the fan geometry.
+  const transition = reducedMotion ? { duration: 0 } : springs.card
 
   const xStep = compact ? FAN.xStepCompact : FAN.xStep
   const rotateStep = compact ? FAN.rotateStepCompact : FAN.rotateStep
 
   const classes = [styles.carousel, className].filter(Boolean).join(' ')
 
+  // Arrow/Home/End work from anywhere inside the carousel group (buttons,
+  // dots, slide overlays), clamped to the same bounds as the prev/next
+  // buttons. Other keys pass through untouched.
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'ArrowLeft') {
+      event.preventDefault()
+      setActiveIndex((prev) => Math.max(0, prev - 1))
+    } else if (event.key === 'ArrowRight') {
+      event.preventDefault()
+      setActiveIndex((prev) => Math.min(count - 1, prev + 1))
+    } else if (event.key === 'Home') {
+      event.preventDefault()
+      setActiveIndex(0)
+    } else if (event.key === 'End') {
+      event.preventDefault()
+      setActiveIndex(count - 1)
+    }
+  }
+
   return (
-    <div className={classes} role="group" aria-roledescription="carousel" aria-label={label}>
+    // APG carousel regions handle arrow keys on the group itself; the role
+    // stays non-interactive because the interactive parts are the buttons.
+    // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
+    <div
+      className={classes}
+      role="group"
+      aria-roledescription="carousel"
+      aria-label={label}
+      onKeyDown={handleKeyDown}
+    >
       <div className={styles.frame}>
         {Array.from({ length: count }, (_, index) => {
           const offset = index - activeIndex

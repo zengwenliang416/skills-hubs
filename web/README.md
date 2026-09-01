@@ -20,19 +20,22 @@ web/
 └── src/
     ├── styles/
     │   ├── amicro-tokens.css   # 唯一 token 来源，从技能 assets 原样复制，禁止手改
-    │   └── base.css            # 重置、页面骨架、focus-visible、reduced-motion 兜底
+    │   ├── hub-tokens.css      # 语义角色别名层：--hub-* 仅映射到 --amicro-*，不引入新色值
+    │   └── base.css            # 重置、页面骨架、skip link、focus-visible、reduced-motion 兜底
     ├── lib/
     │   ├── theme.tsx           # ThemeProvider + useTheme：light/dark/auto
-    │   ├── springs.ts          # spring 预设（移植自 @subhanhq/amicro，MIT）
+    │   ├── clipboard.ts        # copyTextToClipboard：Clipboard API + execCommand 回退
+    │   ├── springs.ts          # spring 预设（card/tilt/magnetic，移植自 @subhanhq/amicro，MIT）
     │   ├── useScrollProgress.ts / useFinePointerMotion.ts
     │   └── useMediaQuery.ts / useInView.ts / useAmbientActive.ts
-    ├── components/             # 自有 primitives：Button / IconButton / Chip / StageCard / CountUp
+    ├── components/             # 自有 primitives：Button / IconButton / Chip / StageCard / CountUp /
+    │   │                       #   CopyButton / CodeBlock / EmptyState
     │   └── amicro/             # 移植组件：TextReveal / FadeUp / FadeIn / TiltCard /
     │                           #   MagneticButton / CardCarousel（文件头有出处注释）
-    ├── features/catalog/       # 目录、完整详情、安装方法、精选浏览与行为事件客户端
+    ├── features/catalog/       # 目录、schema 校验、完整详情（Skill Object Hub）、精选任务浏览与行为事件客户端
     ├── features/metrics/       # Rust API 客户端、访客/npm/Skill 行为统计面板
-    ├── features/palette/       # ⌘K/Ctrl+K 命令面板：搜索、键盘导航、直达详情
-    └── sections/               # 页面区块：Header / Hero / Footer
+    ├── features/palette/       # ⌘K/Ctrl+K 命令面板：动作命令 + 技能搜索、分组、键盘导航、直达详情
+    └── sections/               # 页面区块：Header / Hero / HowItWorks / Contribute / Footer
 ```
 
 ## 设计模式
@@ -40,7 +43,11 @@ web/
 - **Token 作用域**：所有设计值来自 `amicro-tokens.css`，通过
   `:where(.amicro, [data-amicro-scope], [data-amicro-root])` 作用域生效；`<html>` 挂
   `data-amicro-root`（与 `data-amicro-theme` 同元素，token 文件的 auto 暗色媒体查询规则要求两者同挂）。
-  组件样式一律引用 `var(--amicro-*)`，禁止硬编码色值。
+  组件样式一律引用 `var(--amicro-*)`；语义角色（action/success/warning/danger/info）经
+  `hub-tokens.css` 的 `--hub-*` 别名引用，禁止硬编码色值。
+- **catalog 契约**：`features/catalog/schema.ts` 的 `validateCatalog()` 对构建期导入的
+  `catalog.json` 做运行时校验（必填字段、数组形状、重名拒绝），`safeExternalUrl()` 仅放行
+  http/https 外链；`skillLinks()` 返回已消毒链接，缺失或不安全时 UI 显示「未声明」。
 - **主题三态**：`ThemeProvider` 将 `light` / `dark` / `auto` 写入根元素
   `data-amicro-theme` 并持久化到 `localStorage`（默认 `auto`）；`auto` 的解析由 token
   文件内置的 `prefers-color-scheme` 规则完成。`index.html` 内联脚本在首帧前应用持久化主题，避免闪烁。
@@ -68,9 +75,10 @@ web/
   时启用（`useFinePointerMotion`，matchMedia 判定）；否则渲染静态元素、不挂
   mousemove 监听。reduced-motion 下 `TextReveal`/`FadeUp`/`FadeIn` 直接呈现终态，
   carousel 过渡时长置 0 但控件全部可用。
-- **可访问性**：键盘 focus 有独立可见 ring（`--amicro-ring` / `--amicro-focus`）；
+- **可访问性**：skip link 直达 `#main`；键盘 focus 有独立可见 ring（`--amicro-focus`）；
   icon button 强制 `aria-label`；触控目标 ≥ 40px；状态不只依赖颜色（chip 文字 + 圆点）；
-  详情使用原生 `<dialog>`（Esc、背板点击关闭、焦点归还）。
+  详情与命令面板使用原生 `<dialog>`（Esc、背板点击关闭、焦点归还）；命令面板分组展示
+  动作与技能结果并以 live region 播报结果数；轮播支持方向键/Home/End。
 - **整卡单目标**：`SkillCard` 用 stretched-button 模式（标题按钮的 `::after` 覆盖整卡），
   一张卡只有一个交互目标，不嵌套交互控件。
 - **数据来源**：构建期直接 import 仓库根目录的 `catalog.json`（`@catalog` alias）。

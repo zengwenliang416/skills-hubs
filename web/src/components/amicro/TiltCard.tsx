@@ -4,6 +4,7 @@ import { useRef } from 'react'
 import type { ReactNode } from 'react'
 
 import { useFinePointerMotion } from '@/lib/useFinePointerMotion'
+import { springs } from '@/lib/springs'
 
 import styles from './TiltCard.module.css'
 
@@ -27,17 +28,9 @@ export function TiltCard({ children, maxTilt = 8, className }: TiltCardProps) {
   const x = useMotionValue(0)
   const y = useMotionValue(0)
 
-  // Original registry spring config: { damping: 20, stiffness: 200, mass: 0.5 }.
-  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [maxTilt, -maxTilt]), {
-    damping: 20,
-    stiffness: 200,
-    mass: 0.5,
-  })
-  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-maxTilt, maxTilt]), {
-    damping: 20,
-    stiffness: 200,
-    mass: 0.5,
-  })
+  // Shared tilt spring preset (registry: { damping: 20, stiffness: 200, mass: 0.5 }).
+  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [maxTilt, -maxTilt]), springs.tilt)
+  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-maxTilt, maxTilt]), springs.tilt)
 
   if (!enabled) {
     const classes = [styles.root, className].filter(Boolean).join(' ')

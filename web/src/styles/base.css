@@ -82,6 +82,30 @@ a {
   outline-offset: 2px;
 }
 
+/* Skip link: offscreen until keyboard focus, then pinned above the header. */
+:where([data-amicro-root]) .skip-link {
+  position: fixed;
+  inset-block-start: var(--amicro-space-3);
+  inset-inline-start: var(--amicro-space-3);
+  z-index: 100;
+  padding: var(--amicro-space-2) var(--amicro-space-4);
+  border-radius: var(--amicro-radius-control);
+  background: var(--amicro-accent);
+  color: var(--amicro-accent-contrast);
+  font-weight: 500;
+  text-decoration: none;
+  transform: translateY(-300%);
+}
+
+:where([data-amicro-root]) .skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+/* The skip-link target is a landmark, not a control; no ring needed. */
+:where([data-amicro-root]) main#main:focus-visible {
+  outline: none;
+}
+
 :where([data-amicro-root]) section[id] {
   scroll-margin-block-start: var(--amicro-space-20);
 }
@@ -90,6 +114,60 @@ a {
   html {
     scroll-behavior: smooth;
   }
+}
+
+/*
+ * Slim, theme-aware scrollbars. Firefox uses the standard properties;
+ * WebKit gets a token-colored floating thumb with a transparent track.
+ */
+:where([data-amicro-root]) {
+  scrollbar-width: thin;
+  scrollbar-color: var(--amicro-border-strong) transparent;
+}
+
+:where([data-amicro-root]) ::-webkit-scrollbar {
+  inline-size: 10px;
+  block-size: 10px;
+}
+
+:where([data-amicro-root]) ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+:where([data-amicro-root]) ::-webkit-scrollbar-thumb {
+  background: var(--amicro-border-strong);
+  border: 3px solid transparent;
+  border-radius: var(--amicro-radius-pill);
+  background-clip: padding-box;
+}
+
+:where([data-amicro-root]) ::-webkit-scrollbar-thumb:hover {
+  background: var(--amicro-text-muted);
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
+
+/* The viewport scrollbar lives on <html>, which carries the scope hook. */
+html::-webkit-scrollbar {
+  inline-size: 10px;
+  block-size: 10px;
+}
+
+html::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+html::-webkit-scrollbar-thumb {
+  background: var(--amicro-border-strong);
+  border: 3px solid transparent;
+  border-radius: var(--amicro-radius-pill);
+  background-clip: padding-box;
+}
+
+html::-webkit-scrollbar-thumb:hover {
+  background: var(--amicro-text-muted);
+  border: 3px solid transparent;
+  background-clip: padding-box;
 }
 
 /*
