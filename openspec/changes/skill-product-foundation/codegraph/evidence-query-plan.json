@@ -1,0 +1,22 @@
+{
+  "schema": "specnav.codegraph.evidence_query_plan.v1",
+  "generated_at": "2026-09-01T03:01:30.396Z",
+  "active_change": "skill-product-foundation",
+  "queries": [
+    {
+      "id": "development:task-001-product-foundation:evidence",
+      "claim_id": "development:task-001-product-foundation",
+      "stage": "development",
+      "task_id": "001-product-foundation",
+      "status": "planned",
+      "query": "Find the files, symbols, components, routes, services, data flow, and tests that implement \"Implement one user-visible flow from UI entry through state, API/data boundary,\" in change \"skill-product-foundation\". Return concrete file paths, symbols, relationships, and any missing implementation evidence.",
+      "expected_evidence": [
+        "file paths",
+        "symbols",
+        "call relationships",
+        "tests or verification commands"
+      ],
+      "command": "node \"$SPECNAV_CODEGRAPH_ROOT/scripts/codegraph-context.js\" --stage development --claim development:task-001-product-foundation --query \"<query>\" --write --json"
+    }
+  ]
+}

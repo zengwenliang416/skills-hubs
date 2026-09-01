@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "change_id": "skill-product-foundation",
+  "assertions": [
+    {
+      "id": "A1",
+      "statement": "Skill details expose factual decision and installation content from the catalog.",
+      "verify_via": "e2e",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A2",
+      "statement": "Fixed Skill behavior events are validated, stored by daily IP aggregate, and returned only as aggregates.",
+      "verify_via": "unit",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A3",
+      "statement": "Skill engagement and partial npm availability are represented accurately in the metrics UI.",
+      "verify_via": "e2e",
+      "status": "failing",
+      "evidence_ref": null
+    },
+    {
+      "id": "A4",
+      "statement": "The expanded detail remains responsive, accessible, theme-compatible, and reduced-motion safe.",
+      "verify_via": "sensory",
+      "status": "failing",
+      "evidence_ref": null
+    }
+  ]
+}

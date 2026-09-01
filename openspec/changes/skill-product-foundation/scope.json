@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "change_id": "skill-product-foundation",
+  "stage": "development",
+  "allowed_roots": [
+    "catalog.json",
+    "README.md",
+    ".gitignore",
+    "server",
+    "web"
+  ],
+  "denied_roots": [
+    ".git",
+    "data",
+    "skills",
+    "node_modules",
+    "server/target",
+    "web/node_modules",
+    "web/dist",
+    "kimi-export-session_-20260831-144925.md"
+  ],
+  "requires_review_on": [
+    "catalog.json",
+    "server/src/main.rs",
+    "server/src/store.rs",
+    "server/Cargo.toml",
+    "web/package.json"
+  ],
+  "allowed_operations": {
+    "create": true,
+    "modify": true,
+    "delete": false,
+    "rename": false
+  },
+  "prototype_sources": [
+    "openspec/changes/skill-product-foundation/prototype/data-flow-map.md"
+  ],
+  "expires_when": "verification_started"
+}

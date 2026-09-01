@@ -1,0 +1,17 @@
+{
+  "schema": "specnav.prototype.verifier.v1",
+  "status": "green",
+  "checked_entry": "data-flow-map.md",
+  "checks": [
+    "Executed data-flow/flow-harness.js successfully on 2026-09-01.",
+    "Accepted a catalog Skill with a fixed event and rejected unknown Skills, arbitrary events, and unexpected metadata.",
+    "Confirmed repeated actions for one UTC date, IP, Skill, and event type aggregate into one row with an incremented count.",
+    "Inspected the map for best-effort UI behavior, trusted-proxy resolution, bounded database work, aggregate-only responses, npm partial availability, retention health, and privacy boundaries."
+  ],
+  "evidence": [
+    "data-flow/flow-harness.js",
+    "data-flow-map.md",
+    "requirements.md and acceptance.md referenced from the active change"
+  ],
+  "blockers": []
+}

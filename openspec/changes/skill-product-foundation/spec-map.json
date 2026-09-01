@@ -1,0 +1,64 @@
+{
+  "touched_specs": [
+    "ui-design",
+    "system-architecture",
+    "frontend-backend-data-flow",
+    "component-architecture"
+  ],
+  "ui_rules": [
+    "Use existing Amicro tokens and primitives.",
+    "Keep the expanded native dialog responsive and internally scrollable.",
+    "Analytics must not delay or disable primary interactions.",
+    "Represent unavailable npm values as partial data."
+  ],
+  "architecture_modules": [
+    "web catalog feature",
+    "web metrics feature",
+    "Rust HTTP application",
+    "Rust catalog validation",
+    "SQLite store",
+    "npm integration"
+  ],
+  "api_contracts": [
+    "POST /api/events",
+    "GET /api/metrics",
+    "POST /api/visits"
+  ],
+  "database_entities": [
+    "daily_visits",
+    "daily_skill_events"
+  ],
+  "permissions": [
+    "public unauthenticated analytics endpoints",
+    "fixed event enum",
+    "catalog Skill allowlist",
+    "raw IP never returned"
+  ],
+  "operational_constraints": [
+    "SQLite schema v3 preserves v2 visit data",
+    "trusted proxy remains opt-in",
+    "npm failure degrades independently",
+    "no deploy or publish in this change"
+  ],
+  "data_flows": [
+    "FLOW-VISIT",
+    "FLOW-SKILL-VIEW",
+    "FLOW-INSTALL-COPY",
+    "FLOW-DOC-CLICK",
+    "FLOW-REPO-CLICK",
+    "FLOW-METRICS"
+  ],
+  "theme_modes": [
+    "system",
+    "light",
+    "dark",
+    "auto",
+    "theme-toggle:existing"
+  ],
+  "locale_policy": [
+    "i18n:disabled",
+    "locales:zh-CN",
+    "default-locale:zh-CN"
+  ],
+  "unresolved_gaps": []
+}

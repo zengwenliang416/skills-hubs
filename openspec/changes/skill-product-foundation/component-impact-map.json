@@ -1,0 +1,40 @@
+{
+  "new_components": [
+    "catalog-local install method rendering",
+    "metrics Skill engagement panel"
+  ],
+  "reused_components": [
+    "SkillDetailDialog",
+    "Button",
+    "IconButton",
+    "Chip",
+    "FadeUp",
+    "CountUp"
+  ],
+  "extraction_triggers": [
+    "four interactions share one event request schema",
+    "multiple install methods share copy and availability rendering"
+  ],
+  "forbidden_dependencies": [
+    "shared visual primitives importing analytics clients",
+    "frontend components importing backend or database types",
+    "store module depending on React catalog structure"
+  ],
+  "hooks": [],
+  "utilities": [
+    "catalog title lookup",
+    "npm availability summary"
+  ],
+  "services": [
+    "frontend catalog event API client",
+    "backend catalog allowlist parser",
+    "SQLite Skill event aggregate service"
+  ],
+  "required_component_tests": [
+    "TypeScript typecheck",
+    "ESLint accessibility rules",
+    "Amicro strict static verification",
+    "mobile and desktop dialog sensory review"
+  ],
+  "unresolved_gaps": []
+}

@@ -1,0 +1,59 @@
+{
+  "task_id": "001-product-foundation",
+  "goal": "Visitors can evaluate, install, and inspect Skills while the Rust service records privacy-bounded visit and engagement aggregates.",
+  "task_items": [
+    "1.1",
+    "1.2",
+    "2.1",
+    "2.2",
+    "2.3",
+    "3.1",
+    "3.2",
+    "3.3",
+    "4.1",
+    "4.2",
+    "5.1",
+    "5.2"
+  ],
+  "must_read": [
+    "openspec/changes/skill-product-foundation/development/tasks/001-product-foundation/brief.md",
+    "openspec/changes/skill-product-foundation/requirements.md",
+    "openspec/changes/skill-product-foundation/acceptance.md",
+    "openspec/changes/skill-product-foundation/spec-map.json",
+    "openspec/changes/skill-product-foundation/component-impact-map.json",
+    "openspec/changes/skill-product-foundation/prototype/handoff.md",
+    "openspec/changes/skill-product-foundation/prototype/decision.json",
+    "openspec/changes/skill-product-foundation/prototype/data-flow-map.md",
+    "openspec/specs/ui-design/design.md",
+    "openspec/specs/system-architecture/design.md",
+    "openspec/specs/frontend-backend-data-flow/design.md",
+    "openspec/specs/component-architecture/design.md"
+  ],
+  "allowed_files": [
+    "catalog.json",
+    "README.md",
+    ".gitignore",
+    "server",
+    "web"
+  ],
+  "test_paths": [
+    "server/src",
+    "web/src"
+  ],
+  "non_goals": [
+    "Do not expand scope beyond the active change.",
+    "Do not bypass component extraction rules."
+  ],
+  "expected_evidence": [
+    "Rust fmt, test, and Clippy command output",
+    "Frontend typecheck, lint, format, build, and Amicro strict output",
+    "API and SQLite end-to-end evidence",
+    "Independent backend review approval"
+  ],
+  "unsafe_assumptions": [
+    "Forwarding headers are trustworthy without a configured proxy CIDR.",
+    "Missing npm data is equivalent to zero downloads.",
+    "Raw IP rows can be retained indefinitely or exposed through metrics."
+  ],
+  "stop_condition": "Stop if implementation needs files outside scope, a new tracking field, a breaking public contract, or deployment/publishing."
+}

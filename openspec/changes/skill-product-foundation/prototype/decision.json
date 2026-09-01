@@ -1,0 +1,8 @@
+{
+  "status": "approved",
+  "prototype_code": "required_present",
+  "prototype_type": "data-flow",
+  "approved_variant": "first-party daily IP aggregate with best-effort client events",
+  "promotion": "requires_development_gate",
+  "blocked_reasons": []
+}

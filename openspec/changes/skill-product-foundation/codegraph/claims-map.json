@@ -1,0 +1,32 @@
+{
+  "schema": "specnav.codegraph.claims.v1",
+  "generated_at": "2026-09-01T03:01:30.396Z",
+  "active_change": "skill-product-foundation",
+  "claims": [
+    {
+      "id": "development:task-001-product-foundation",
+      "kind": "development-task",
+      "stage": "development",
+      "task_id": "001-product-foundation",
+      "text": "Implement one user-visible flow from UI entry through state, API/data boundary,",
+      "required": true,
+      "source": "specnav-codegraph-plan",
+      "source_paths": [
+        "openspec/changes/skill-product-foundation/development/tasks/001-product-foundation/brief.md",
+        "openspec/changes/skill-product-foundation/development/tasks/001-product-foundation/context.json"
+      ],
+      "expected_evidence": [
+        "Focused tests or command output",
+        "Task report",
+        "Spec review",
+        "Quality review"
+      ],
+      "allowed_files": [
+        "src"
+      ],
+      "query_ids": [
+        "development:task-001-product-foundation:evidence"
+      ]
+    }
+  ]
+}
