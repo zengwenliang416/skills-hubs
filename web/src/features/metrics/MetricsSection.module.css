@@ -74,6 +74,7 @@
 }
 
 .metricLabel,
+.metricCaption,
 .metricNote,
 .cardHint,
 .packageName,
@@ -95,9 +96,17 @@
   line-height: 1;
 }
 
+.metricCaption,
 .metricNote {
-  margin-block-start: var(--amicro-space-2);
   font-size: var(--amicro-font-size-xs);
+}
+
+.metricCaption {
+  margin-block-start: var(--amicro-space-2);
+}
+
+.metricNote {
+  margin-block-start: var(--amicro-space-1);
 }
 
 .detailGrid {

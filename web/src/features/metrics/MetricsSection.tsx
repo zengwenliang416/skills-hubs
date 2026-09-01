@@ -126,12 +126,28 @@ export function MetricsSection() {
   const maxVisitors = Math.max(1, ...metrics.daily_visitors.map((item) => item.visitors))
   const maxDownloads = Math.max(1, ...metrics.npm_downloads.map((item) => item.downloads ?? 0))
   const summary = [
-    { label: '累计访客', value: metrics.total_visitors, note: '按 IP 去重' },
-    { label: '今日访客', value: metrics.today_visitors, note: 'UTC 自然日' },
-    { label: '页面访问', value: metrics.total_page_views, note: '累计浏览次数' },
+    {
+      label: '累计访客',
+      value: metrics.total_visitors,
+      caption: '按 IP 去重的全部访客',
+      note: null,
+    },
+    {
+      label: '今日访客',
+      value: metrics.today_visitors,
+      caption: 'UTC 当日按 IP 去重',
+      note: null,
+    },
+    {
+      label: '页面访问',
+      value: metrics.total_page_views,
+      caption: '累计页面加载次数',
+      note: null,
+    },
     {
       label: 'npm 周下载',
       value: npmSummary.value,
+      caption: 'npm 官方 API 最近 7 天',
       note: npmSummary.note,
     },
   ]
@@ -159,7 +175,8 @@ export function MetricsSection() {
                 <dd className={styles.metricValue}>
                   {item.value === null ? '—' : <CountUp value={item.value} />}
                 </dd>
-                <span className={styles.metricNote}>{item.note}</span>
+                <span className={styles.metricCaption}>{item.caption}</span>
+                {item.note ? <span className={styles.metricNote}>{item.note}</span> : null}
               </div>
             ))}
           </dl>
