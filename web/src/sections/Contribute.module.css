@@ -1,0 +1,97 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--amicro-space-8);
+}
+
+.sectionHeader {
+  display: flex;
+  flex-direction: column;
+  gap: var(--amicro-space-2);
+}
+
+.title {
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: var(--amicro-line-compact);
+}
+
+.description {
+  max-inline-size: 40rem;
+  color: var(--amicro-text-muted);
+  font-size: var(--amicro-font-size-base);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--amicro-space-5);
+}
+
+.text {
+  max-inline-size: 44rem;
+  color: var(--amicro-text-soft);
+  font-size: var(--amicro-font-size-base);
+  line-height: var(--amicro-line-body);
+}
+
+.links {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: clamp(0.75rem, 2vw, 1.25rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.link {
+  display: flex;
+  align-items: baseline;
+  gap: var(--amicro-space-2);
+  block-size: 100%;
+  padding: var(--amicro-space-4);
+  border: 1px solid var(--amicro-border);
+  border-radius: var(--amicro-radius-card);
+  background: var(--amicro-surface);
+  text-decoration: none;
+}
+
+.linkLabel {
+  color: var(--amicro-text);
+  font-size: var(--amicro-font-size-sm);
+  font-weight: 600;
+  letter-spacing: var(--amicro-letter-tight);
+}
+
+.linkNote {
+  color: var(--amicro-text-muted);
+  font-size: var(--amicro-font-size-xs);
+}
+
+.linkArrow {
+  margin-inline-start: auto;
+  color: var(--amicro-text-muted);
+  font-size: var(--amicro-font-size-sm);
+}
+
+.link:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: var(--amicro-ring);
+}
+
+@media (hover: hover) {
+  .link:hover {
+    border-color: var(--amicro-border-strong);
+    background: var(--amicro-surface-hover);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .link {
+    transition:
+      background-color var(--amicro-duration-fast) var(--amicro-ease-standard),
+      border-color var(--amicro-duration-fast) var(--amicro-ease-standard);
+  }
+}

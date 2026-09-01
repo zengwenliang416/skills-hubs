@@ -2,6 +2,56 @@
   block-size: 100%;
 }
 
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--amicro-space-2);
+}
+
+/* One-line clamp; full text remains available in the detail dialog. */
+.description {
+  overflow: hidden;
+  color: var(--amicro-text-soft);
+  font-size: var(--amicro-font-size-sm);
+  line-height: var(--amicro-line-body);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.metaRow {
+  font-size: var(--amicro-font-size-xs);
+  color: var(--amicro-text-muted);
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--amicro-space-1);
+}
+
+.moreTags {
+  color: var(--amicro-text-muted);
+  font-size: var(--amicro-font-size-xs);
+}
+
+.trust {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--amicro-space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.trustItem {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--amicro-space-1);
+  color: var(--hub-success);
+  font-size: var(--amicro-font-size-xs);
+}
+
 /* Title button stretches an invisible target over the whole card. */
 .openButton {
   appearance: none;

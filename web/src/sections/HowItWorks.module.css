@@ -1,0 +1,75 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--amicro-space-8);
+}
+
+.sectionHeader {
+  display: flex;
+  flex-direction: column;
+  gap: var(--amicro-space-2);
+}
+
+.title {
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: var(--amicro-line-compact);
+}
+
+.description {
+  max-inline-size: 40rem;
+  color: var(--amicro-text-muted);
+  font-size: var(--amicro-font-size-base);
+}
+
+/* Four-up on wide screens, single column on compact ones. */
+.steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  gap: clamp(1rem, 2vw, 1.5rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stepItem {
+  display: flex;
+  flex-direction: column;
+}
+
+.step {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--amicro-space-2);
+  padding: var(--amicro-space-5);
+  border: 1px solid var(--amicro-border);
+  border-radius: var(--amicro-radius-card);
+  background: var(--amicro-surface);
+}
+
+.stepNumber {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--amicro-space-8);
+  block-size: var(--amicro-space-8);
+  border-radius: var(--amicro-radius-pill);
+  background: var(--amicro-surface-raised);
+  color: var(--amicro-text-muted);
+  font-size: var(--amicro-font-size-sm);
+  font-weight: 600;
+}
+
+.stepLabel {
+  font-size: var(--amicro-font-size-base);
+  font-weight: 600;
+  letter-spacing: var(--amicro-letter-tight);
+}
+
+.stepDescription {
+  color: var(--amicro-text-muted);
+  font-size: var(--amicro-font-size-sm);
+  line-height: var(--amicro-line-body);
+}

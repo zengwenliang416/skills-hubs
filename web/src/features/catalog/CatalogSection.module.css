@@ -93,27 +93,55 @@
   gap: clamp(1rem, 2vw, 1.5rem);
 }
 
-.empty {
+.resultRow {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   align-items: center;
+  justify-content: space-between;
   gap: var(--amicro-space-3);
-  padding-block: var(--amicro-space-12);
-  padding-inline: var(--amicro-space-6);
-  border: 1px dashed var(--amicro-border-strong);
-  border-radius: var(--amicro-radius-card);
-  text-align: center;
 }
 
-.emptyTitle {
-  font-size: var(--amicro-font-size-lg);
-  font-weight: 600;
-  letter-spacing: var(--amicro-letter-tight);
-}
-
-.emptyHint {
+.resultCount {
   color: var(--amicro-text-muted);
   font-size: var(--amicro-font-size-sm);
+}
+
+/* Anchor styled to sit alongside buttons inside the EmptyState actions. */
+.guideLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: var(--amicro-control-height);
+  padding-inline: var(--amicro-space-5);
+  border: 1px solid var(--amicro-border);
+  border-radius: var(--amicro-radius-pill);
+  background: var(--amicro-surface);
+  color: var(--amicro-text);
+  font-size: var(--amicro-font-size-sm);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  text-decoration: none;
+}
+
+.guideLink:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: var(--amicro-ring);
+}
+
+@media (hover: hover) {
+  .guideLink:hover {
+    border-color: var(--amicro-border-strong);
+    background: var(--amicro-surface-hover);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .guideLink {
+    transition:
+      background-color var(--amicro-duration-fast) var(--amicro-ease-standard),
+      border-color var(--amicro-duration-fast) var(--amicro-ease-standard);
+  }
 }
 
 @media (hover: hover) {

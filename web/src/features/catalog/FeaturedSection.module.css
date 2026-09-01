@@ -22,3 +22,24 @@
   color: var(--amicro-text-muted);
   font-size: var(--amicro-font-size-base);
 }
+
+.slide {
+  display: flex;
+  flex-direction: column;
+  gap: var(--amicro-space-2);
+  block-size: 100%;
+}
+
+/* Task framing line above each carousel card. */
+.taskIntro {
+  overflow: hidden;
+  color: var(--amicro-text-soft);
+  font-size: var(--amicro-font-size-sm);
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.slide > *:last-child {
+  flex: 1;
+}

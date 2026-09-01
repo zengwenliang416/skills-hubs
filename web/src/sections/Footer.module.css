@@ -33,6 +33,13 @@
   font-size: var(--amicro-font-size-sm);
 }
 
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--amicro-space-2);
+}
+
 .link {
   display: inline-flex;
   align-items: center;

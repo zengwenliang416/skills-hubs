@@ -111,6 +111,12 @@ export function Header({ onOpenPalette }: HeaderProps) {
           <a className={styles.link} href="#catalog">
             目录
           </a>
+          <a className={styles.link} href="#how-it-works">
+            如何开始
+          </a>
+          <a className={styles.link} href="#contribute">
+            贡献
+          </a>
           <a className={styles.link} href="#about">
             关于
           </a>
