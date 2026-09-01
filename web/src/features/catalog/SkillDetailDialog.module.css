@@ -1,8 +1,10 @@
 .dialog {
+  --dialog-padding: var(--amicro-space-6);
+
   inline-size: min(52rem, calc(100vw - var(--amicro-space-8)));
   max-block-size: calc(100dvh - var(--amicro-space-8));
   overflow-y: auto;
-  padding: var(--amicro-space-6);
+  padding: var(--dialog-padding);
   border: 1px solid var(--amicro-border);
   border-radius: var(--amicro-radius-card);
   background: var(--amicro-surface);
@@ -14,12 +16,18 @@
   background: var(--amicro-overlay);
 }
 
+/* Sticky so the close button stays reachable while the content scrolls. */
 .header {
+  position: sticky;
+  top: calc(-1 * var(--dialog-padding));
+  z-index: 1;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: var(--amicro-space-4);
   margin-block-end: var(--amicro-space-5);
+  padding-block-end: var(--amicro-space-3);
+  background: var(--amicro-surface);
 }
 
 .heading {
@@ -43,7 +51,7 @@
 }
 
 .description {
-  max-inline-size: 46rem;
+  margin-block-start: var(--amicro-space-2);
   color: var(--amicro-text-muted);
   font-size: var(--amicro-font-size-base);
   line-height: var(--amicro-line-body);
@@ -54,34 +62,32 @@
   flex-wrap: wrap;
   gap: var(--amicro-space-2);
   margin-block-start: var(--amicro-space-4);
+  margin-block-end: var(--amicro-space-3);
 }
 
-.contentGrid,
-.lowerGrid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--amicro-space-3);
-  margin-block-start: var(--amicro-space-5);
-}
-
-.contentSection,
-.sectionBlock,
-.quickStart {
+.sectionBlock {
+  margin-block-start: var(--amicro-space-3);
   padding: var(--amicro-space-4);
   border: 1px solid var(--amicro-border);
   border-radius: var(--amicro-radius-stage);
   background: var(--amicro-stage);
 }
 
-.sectionBlock,
-.quickStart {
-  margin-block-start: var(--amicro-space-3);
-}
-
 .sectionTitle {
   font-size: var(--amicro-font-size-sm);
   font-weight: 600;
   letter-spacing: var(--amicro-letter-tight);
+}
+
+.subTitle {
+  font-size: var(--amicro-font-size-xs);
+  font-weight: 600;
+  color: var(--amicro-text-muted);
+  letter-spacing: var(--amicro-letter-tight);
+}
+
+.highlightGroup {
+  margin-block-start: var(--amicro-space-3);
 }
 
 .featureList {
@@ -98,14 +104,28 @@
   color: var(--amicro-accent);
 }
 
+.installList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--amicro-space-3);
+  margin-block-start: var(--amicro-space-3);
+}
+
+.quickStartLabel {
+  margin-block-start: var(--amicro-space-1);
+  color: var(--amicro-text-muted);
+  font-size: var(--amicro-font-size-xs);
+}
+
+.blockCode {
+  margin-block-start: var(--amicro-space-3);
+}
+
 .fields {
   display: flex;
   flex-direction: column;
   gap: var(--amicro-space-2);
-  padding: var(--amicro-space-4);
-  border: 1px solid var(--amicro-border);
-  border-radius: var(--amicro-radius-stage);
-  background: var(--amicro-stage);
+  margin-block-start: var(--amicro-space-3);
 }
 
 .fieldRow {
@@ -120,10 +140,23 @@
   font-size: var(--amicro-font-size-sm);
 }
 
-.value {
-  font-family: var(--amicro-font-mono);
+.value,
+.valuePlain {
   font-size: var(--amicro-font-size-sm);
   word-break: break-all;
+}
+
+.value {
+  font-family: var(--amicro-font-mono);
+}
+
+.valueLink {
+  color: var(--hub-action);
+  text-decoration: none;
+}
+
+.undeclared {
+  color: var(--amicro-text-muted);
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -176,170 +209,22 @@
   }
 }
 
-.installList {
-  display: flex;
-  flex-direction: column;
-  gap: var(--amicro-space-3);
-  margin-block-start: var(--amicro-space-3);
-}
-
-.installMethod {
-  display: flex;
-  flex-direction: column;
-  gap: var(--amicro-space-3);
-  padding: var(--amicro-space-3);
-  border: 1px solid var(--amicro-border);
-  border-radius: var(--amicro-radius-control);
-  background: var(--amicro-surface);
-}
-
-.installTitle {
-  font-size: var(--amicro-font-size-sm);
-  font-weight: 600;
-}
-
-.installDescription,
-.manualNote,
-.quickStartLabel {
-  color: var(--amicro-text-muted);
-  font-size: var(--amicro-font-size-xs);
-}
-
-.installDescription,
-.quickStartLabel {
-  margin-block-start: var(--amicro-space-1);
-}
-
-.commandRow {
-  display: flex;
-  align-items: center;
-  gap: var(--amicro-space-3);
-  padding: var(--amicro-space-3);
-  border-radius: var(--amicro-radius-control);
-  background: var(--amicro-stage);
-}
-
-.command {
-  flex: 1;
-  min-inline-size: 0;
-  overflow-x: auto;
-  font-family: var(--amicro-font-mono);
-  font-size: var(--amicro-font-size-sm);
-  white-space: nowrap;
-}
-
-.quickStart {
-  display: grid;
-  grid-template-columns: minmax(9rem, 0.35fr) minmax(0, 1fr);
-  align-items: center;
-  gap: var(--amicro-space-4);
-}
-
-.quickStartCode {
-  overflow-x: auto;
-  margin: 0;
-  padding: var(--amicro-space-3);
-  border-radius: var(--amicro-radius-control);
-  background: var(--amicro-surface);
-  font-family: var(--amicro-font-mono);
-  font-size: var(--amicro-font-size-xs);
-  white-space: pre-wrap;
-  word-break: break-word;
-}
-
-.actions {
-  display: flex;
-  flex-direction: column;
-  gap: var(--amicro-space-3);
-}
-
-.resourceLink {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--amicro-space-3);
-  min-block-size: var(--amicro-control-height);
-  padding: var(--amicro-space-3) var(--amicro-space-4);
-  border: 1px solid var(--amicro-border);
-  border-radius: var(--amicro-radius-control);
-  background: var(--amicro-surface);
-  font-size: var(--amicro-font-size-sm);
-  font-weight: 500;
-  text-decoration: none;
-}
-
-.copyFeedback {
-  min-inline-size: var(--amicro-space-12);
-  color: var(--amicro-success);
-  font-size: var(--amicro-font-size-xs);
-  font-weight: 500;
-}
-
-.copyFeedback[data-tone='failed'] {
-  color: var(--amicro-danger);
-}
-
 @media (hover: hover) {
-  .resourceLink:hover {
-    border-color: var(--amicro-border-strong);
-    background: var(--amicro-surface-hover);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  /* Icon swap: small scale/fade, ~180ms; state also carried by the text. */
-  .copyIcon {
-    animation: copyIconIn var(--amicro-duration-fast) var(--amicro-ease-emphasized) both;
-  }
-
-  .resourceLink {
-    transition:
-      background-color var(--amicro-duration-fast) var(--amicro-ease-standard),
-      border-color var(--amicro-duration-fast) var(--amicro-ease-standard),
-      transform var(--amicro-duration-instant) var(--amicro-ease-standard);
-  }
-
-  .resourceLink:active {
-    transform: scale(0.99);
-  }
-
-  @keyframes copyIconIn {
-    from {
-      opacity: 0;
-      transform: scale(0.6);
-    }
-
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
+  .valueLink:hover {
+    text-decoration: underline;
   }
 }
 
 @media (max-width: 40rem) {
   .dialog {
-    inline-size: calc(100vw - var(--amicro-space-4));
-    max-block-size: calc(100dvh - var(--amicro-space-4));
-    padding: var(--amicro-space-4);
-  }
+    --dialog-padding: var(--amicro-space-4);
 
-  .contentGrid,
-  .lowerGrid,
-  .quickStart {
-    grid-template-columns: 1fr;
+    inline-size: calc(100vw - var(--amicro-space-2));
+    max-block-size: calc(100dvh - var(--amicro-space-2));
   }
 
   .fieldRow {
     grid-template-columns: 4.5rem minmax(0, 1fr);
     gap: var(--amicro-space-2);
-  }
-
-  .commandRow {
-    align-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  .command {
-    inline-size: calc(100% - var(--amicro-control-height));
   }
 }
