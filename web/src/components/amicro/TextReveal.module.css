@@ -1,0 +1,14 @@
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.line {
+  display: block;
+  overflow: hidden;
+  padding-block: var(--amicro-space-1);
+}
+
+.text {
+  display: block;
+}

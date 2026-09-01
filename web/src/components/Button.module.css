@@ -1,0 +1,61 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--amicro-space-2);
+  min-block-size: var(--amicro-control-height);
+  padding-inline: var(--amicro-space-5);
+  border: 1px solid var(--amicro-border);
+  border-radius: var(--amicro-radius-pill);
+  background: var(--amicro-surface);
+  color: var(--amicro-text);
+  font-size: var(--amicro-font-size-sm);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  cursor: pointer;
+}
+
+.primary {
+  border-color: transparent;
+  background: var(--amicro-accent);
+  color: var(--amicro-accent-contrast);
+}
+
+.button:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: var(--amicro-ring);
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+@media (hover: hover) {
+  .button:hover {
+    border-color: var(--amicro-border-strong);
+    background: var(--amicro-surface-hover);
+  }
+
+  .primary:hover {
+    border-color: transparent;
+    background: var(--amicro-accent);
+    opacity: 0.88;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .button {
+    transition:
+      background-color var(--amicro-duration-fast) var(--amicro-ease-standard),
+      border-color var(--amicro-duration-fast) var(--amicro-ease-standard),
+      box-shadow var(--amicro-duration-fast) var(--amicro-ease-standard),
+      opacity var(--amicro-duration-fast) var(--amicro-ease-standard),
+      transform var(--amicro-duration-instant) var(--amicro-ease-standard);
+  }
+
+  .button:active {
+    transform: scale(0.98);
+  }
+}

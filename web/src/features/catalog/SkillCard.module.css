@@ -1,0 +1,174 @@
+.card {
+  block-size: 100%;
+}
+
+/* Title button stretches an invisible target over the whole card. */
+.openButton {
+  appearance: none;
+  padding: 0;
+  border: 0;
+  border-radius: var(--amicro-radius-detail);
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.openButton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--amicro-radius-card);
+}
+
+.openButton:focus-visible {
+  outline: 2px solid transparent;
+}
+
+.openButton:focus-visible::after {
+  outline: 2px solid var(--amicro-focus);
+  outline-offset: 2px;
+  box-shadow: var(--amicro-ring);
+}
+
+.visual {
+  position: relative;
+  display: grid;
+  place-items: center;
+  inline-size: var(--amicro-space-16);
+  block-size: var(--amicro-space-16);
+}
+
+.glyph {
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+/* --- media: quiet glow + a slow diagonal shimmer over the placeholder --- */
+
+.mediaGlow {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--amicro-radius-stage);
+  background: radial-gradient(
+    circle at 50% 62%,
+    color-mix(in srgb, var(--amicro-text) 10%, transparent),
+    transparent 72%
+  );
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.mediaShimmer {
+  position: absolute;
+  inset-block: calc(-1 * var(--amicro-space-4));
+  inline-size: 38%;
+  inset-inline-start: 0;
+  background: linear-gradient(
+    100deg,
+    transparent,
+    color-mix(in srgb, var(--amicro-text) 14%, transparent),
+    transparent
+  );
+  opacity: 0.6;
+  transform: translateX(-180%) skewX(-14deg);
+  pointer-events: none;
+}
+
+/* --- frontend-design: a token swatch row pulsing in slow sequence --- */
+
+.swatches {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: calc(-1 * var(--amicro-space-1));
+  display: flex;
+  justify-content: center;
+  gap: var(--amicro-space-1);
+}
+
+.swatch {
+  inline-size: var(--amicro-space-2);
+  block-size: var(--amicro-space-2);
+  border-radius: var(--amicro-radius-pill);
+  background: var(--amicro-text-muted);
+  opacity: 0.35;
+}
+
+.swatch:nth-child(2) {
+  background: var(--amicro-success);
+}
+
+.swatch:nth-child(3) {
+  background: var(--amicro-warning);
+}
+
+.swatch:nth-child(4) {
+  background: var(--amicro-danger);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .openButton::after {
+    transition: box-shadow var(--amicro-duration-fast) var(--amicro-ease-standard);
+  }
+
+  .mediaGlow {
+    animation: mediaBreathe calc(var(--amicro-duration-section) * 10) var(--amicro-ease-standard)
+      infinite alternate;
+  }
+
+  .mediaShimmer {
+    animation: mediaSweep calc(var(--amicro-duration-section) * 12) var(--amicro-ease-standard)
+      infinite;
+  }
+
+  .swatch {
+    animation: swatchPulse calc(var(--amicro-duration-section) * 10) var(--amicro-ease-standard)
+      infinite;
+    animation-delay: calc(var(--swatch-index, 0) * var(--amicro-duration-section) * 2);
+  }
+
+  @keyframes mediaBreathe {
+    from {
+      opacity: 0.2;
+    }
+
+    to {
+      opacity: 0.65;
+    }
+  }
+
+  @keyframes mediaSweep {
+    0% {
+      transform: translateX(-180%) skewX(-14deg);
+    }
+
+    40% {
+      transform: translateX(380%) skewX(-14deg);
+    }
+
+    100% {
+      transform: translateX(380%) skewX(-14deg);
+    }
+  }
+
+  @keyframes swatchPulse {
+    0%,
+    100% {
+      opacity: 0.35;
+      transform: scale(1);
+    }
+
+    10% {
+      opacity: 1;
+      transform: scale(1.3);
+    }
+
+    22% {
+      opacity: 0.35;
+      transform: scale(1);
+    }
+  }
+}

@@ -83,7 +83,7 @@ stable per-Skill metrics with truthful npm availability.
 - `cargo fmt --manifest-path server/Cargo.toml --check`
 - `cargo test --manifest-path server/Cargo.toml`
 - `cargo clippy --manifest-path server/Cargo.toml --all-targets -- -D warnings`
-- `npm run typecheck`, `npm run lint`, `npm run format:check`, and
+- `npm run test`, `npm run typecheck`, `npm run lint`, `npm run format:check`, and
   `npm run build` from `web/`.
 - Amicro strict validation, OpenSpec/SpecNav contracts, and local API E2E.
 

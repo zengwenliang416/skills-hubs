@@ -1,0 +1,51 @@
+.hero {
+  display: flex;
+  flex-direction: column;
+  gap: var(--amicro-space-5);
+}
+
+.kicker {
+  color: var(--amicro-text-muted);
+  font-size: var(--amicro-font-size-xs);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.title {
+  max-inline-size: 18ch;
+  font-size: clamp(2rem, 5vw, 4.5rem);
+  font-weight: 600;
+  letter-spacing: var(--amicro-letter-tighter);
+  line-height: 1.05;
+  text-wrap: balance;
+}
+
+.lede {
+  max-inline-size: 42rem;
+  color: var(--amicro-text-soft);
+  font-size: var(--amicro-font-size-lg);
+}
+
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--amicro-space-8);
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--amicro-space-1);
+}
+
+.statValue {
+  font-size: var(--amicro-font-size-xl);
+  font-weight: 600;
+  letter-spacing: var(--amicro-letter-tight);
+  line-height: var(--amicro-line-compact);
+}
+
+.statLabel {
+  color: var(--amicro-text-muted);
+  font-size: var(--amicro-font-size-xs);
+}

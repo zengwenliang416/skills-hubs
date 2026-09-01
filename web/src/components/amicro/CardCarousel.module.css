@@ -1,0 +1,96 @@
+.carousel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--amicro-space-5);
+}
+
+.frame {
+  position: relative;
+  inline-size: 100%;
+  block-size: calc(var(--amicro-card-reference-height) + var(--amicro-space-20));
+  /* Fan tips may poke past narrow viewports; clip instead of scrolling. */
+  overflow-x: clip;
+}
+
+.slide {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  translate: -50% -50%;
+  inline-size: min(72vw, var(--amicro-card-reference-width));
+  transform-origin: 50% 100%;
+}
+
+/* Focus overlay on non-active slides: brings a side card to the front. */
+.slideFocus {
+  position: absolute;
+  inset: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--amicro-radius-card);
+  background: transparent;
+  cursor: pointer;
+}
+
+.slideFocus:focus-visible {
+  outline: 2px solid var(--amicro-focus);
+  outline-offset: 2px;
+  box-shadow: var(--amicro-ring);
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: var(--amicro-space-4);
+}
+
+.dots {
+  display: flex;
+  align-items: center;
+}
+
+/* 8px visual dot inside a 40px+ hit target via content-box background. */
+.dot {
+  box-sizing: content-box;
+  inline-size: var(--amicro-space-2);
+  block-size: var(--amicro-space-2);
+  padding: var(--amicro-space-4);
+  border: 0;
+  border-radius: var(--amicro-radius-pill);
+  background: var(--amicro-text-muted);
+  background-clip: content-box;
+  opacity: 0.4;
+  cursor: pointer;
+}
+
+.dot[data-current='true'] {
+  background: var(--amicro-accent);
+  background-clip: content-box;
+  opacity: 1;
+  transform: scale(1.3);
+}
+
+.dot:focus-visible {
+  outline: 2px solid var(--amicro-focus);
+  outline-offset: 0;
+}
+
+.dot:disabled {
+  cursor: not-allowed;
+}
+
+@media (hover: hover) {
+  .dot:hover {
+    opacity: 0.7;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .dot {
+    transition:
+      transform var(--amicro-duration-fast) var(--amicro-ease-standard),
+      opacity var(--amicro-duration-fast) var(--amicro-ease-standard),
+      background-color var(--amicro-duration-fast) var(--amicro-ease-standard);
+  }
+}

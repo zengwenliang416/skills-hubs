@@ -1,0 +1,45 @@
+.iconButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  inline-size: var(--amicro-hit-target);
+  block-size: var(--amicro-hit-target);
+  border: 1px solid var(--amicro-border);
+  border-radius: var(--amicro-radius-pill);
+  background: var(--amicro-surface);
+  color: var(--amicro-text);
+  cursor: pointer;
+}
+
+.iconButton:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: var(--amicro-ring);
+}
+
+.iconButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+@media (hover: hover) {
+  .iconButton:hover {
+    border-color: var(--amicro-border-strong);
+    background: var(--amicro-surface-hover);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .iconButton {
+    transition:
+      background-color var(--amicro-duration-fast) var(--amicro-ease-standard),
+      border-color var(--amicro-duration-fast) var(--amicro-ease-standard),
+      box-shadow var(--amicro-duration-fast) var(--amicro-ease-standard),
+      transform var(--amicro-duration-instant) var(--amicro-ease-standard);
+  }
+
+  .iconButton:active {
+    transform: scale(0.95);
+  }
+}

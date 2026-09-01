@@ -1,0 +1,108 @@
+.header {
+  position: sticky;
+  inset-block-start: var(--amicro-space-4);
+  z-index: 10;
+  padding-inline: clamp(16px, 4vw, 48px);
+  margin-block-start: var(--amicro-space-4);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: var(--amicro-space-2);
+  max-inline-size: 72rem;
+  margin-inline: auto;
+  padding: var(--amicro-space-2);
+  border: 1px solid var(--amicro-border);
+  border-radius: var(--amicro-radius-pill);
+  background: var(--amicro-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* Opaque fallback when backdrop-filter is unavailable. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .nav {
+    background: var(--amicro-glass-opaque);
+  }
+}
+
+.brand {
+  padding-inline: var(--amicro-space-3);
+  min-block-size: var(--amicro-hit-target);
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--amicro-radius-pill);
+  font-weight: 600;
+  letter-spacing: var(--amicro-letter-tight);
+  text-decoration: none;
+}
+
+.links {
+  display: flex;
+  gap: var(--amicro-space-1);
+  margin-inline-start: auto;
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--amicro-hit-target);
+  padding-inline: var(--amicro-space-3);
+  border-radius: var(--amicro-radius-pill);
+  color: var(--amicro-text-soft);
+  font-size: var(--amicro-font-size-sm);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+@media (hover: hover) {
+  .link:hover {
+    background: var(--amicro-surface-hover);
+    color: var(--amicro-text);
+  }
+
+  .brand:hover {
+    background: var(--amicro-surface-hover);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .link,
+  .brand {
+    transition:
+      background-color var(--amicro-duration-fast) var(--amicro-ease-standard),
+      color var(--amicro-duration-fast) var(--amicro-ease-standard);
+  }
+}
+
+/* Icon swap: small rotate/fade, fixed footprint so the button never resizes. */
+@media (prefers-reduced-motion: no-preference) {
+  .themeIcon {
+    animation: themeIconIn var(--amicro-duration-fast) var(--amicro-ease-emphasized) both;
+  }
+
+  @keyframes themeIconIn {
+    from {
+      opacity: 0;
+      transform: rotate(-30deg) scale(0.75);
+    }
+
+    to {
+      opacity: 1;
+      transform: rotate(0deg) scale(1);
+    }
+  }
+}
+
+/* Scroll progress indicator pinned to the viewport top. */
+.progress {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline: 0;
+  z-index: 20;
+  block-size: calc(var(--amicro-space-1) / 2);
+  background: var(--amicro-accent);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+}

@@ -1,6 +1,6 @@
 {
-  "schema_version": "1.0",
-  "updated_at": "2026-08-31",
+  "schema_version": "1.1",
+  "updated_at": "2026-09-01",
   "skills": [
     {
       "name": "image-api-workbench",
@@ -11,7 +11,37 @@
       "runtime": "python>=3.9",
       "npm": "image-api-workbench",
       "license": "Proprietary",
-      "status": "active"
+      "status": "active",
+      "description": "通过 OpenAI Images API 或兼容网关执行可复现的图片生成、参考图编辑、透明素材制作、双语本地化、路由诊断与产物验证，并使用元数据旁车记录实际格式、尺寸和请求证据。",
+      "tags": ["图片生成", "图片编辑", "GPT Image", "API 诊断", "产物验证"],
+      "highlights": [
+        "支持生成、最多 16 张参考图编辑、遮罩、透明 PNG/WebP、流式局部图和多图输出。",
+        "提供远程模型目录检查、严格参数校验和 dry-run，可在付费调用前诊断兼容网关。",
+        "生成元数据旁车并核验实际尺寸、格式、哈希和输入来源，避免将非原生尺寸误报为原生 4K。"
+      ],
+      "use_cases": [
+        "生成封面、社交媒体配图、透明图标和发布素材。",
+        "基于同一母版制作保持构图一致的中英文或多语言视觉版本。",
+        "测试 OpenAI Images API 或 NewAPI 等兼容网关的模型、参数和流式能力。"
+      ],
+      "install_methods": [
+        {
+          "label": "npm 全局 CLI",
+          "description": "安装命令行工具和完整 Skill 运行资源。",
+          "command": "npm install --global image-api-workbench"
+        },
+        {
+          "label": "安装到 Codex",
+          "description": "先完成 npm 全局安装，再将完整 Skill 复制到 Codex Skills 目录。",
+          "command": "mkdir -p ~/.codex/skills && cp -R \"$(npm root --global)/image-api-workbench\" ~/.codex/skills/image-api-workbench"
+        }
+      ],
+      "quick_start": {
+        "label": "先做一次无付费 dry-run",
+        "command": "image-api-workbench --prompt \"A clean editorial AI infrastructure cover, no text, no logos\" --size 1536x864 --quality high --out ./artifacts/cover.png --dry-run"
+      },
+      "documentation_url": "https://github.com/zengwenliang416/skills-hubs/blob/main/skills/image-api-workbench/README.md",
+      "repository_url": "https://github.com/zengwenliang416/skills-hubs/tree/main/skills/image-api-workbench"
     },
     {
       "name": "amicro-universal-frontend-style",
@@ -22,7 +52,31 @@
       "runtime": "python>=3.9",
       "npm": "amicro-universal-frontend-style",
       "license": "MIT",
-      "status": "active"
+      "status": "active",
+      "description": "将 Amicro 的视觉语言、作用域设计 Token、组件表面和克制的微交互迁移到现有前端，同时保留目标项目的技术栈、品牌、内容、组件 API、业务行为和可访问性。",
+      "tags": ["前端设计", "设计系统", "微交互", "跨框架", "可访问性"],
+      "highlights": [
+        "适配 React、Next.js、Vue、Nuxt、Svelte、Astro、Tailwind、CSS Modules、CSS-in-JS 和原生前端。",
+        "提供项目检查、Token 与样式层安装、更新、漂移保护、卸载和严格静态验证工具。",
+        "内置键盘、触摸、焦点、主题、对比度、移动端溢出、RTL 和 reduced-motion 验收约束。"
+      ],
+      "use_cases": [
+        "将既有页面或组件迁移为 Amicro 风格，同时保持业务逻辑和公开组件契约不变。",
+        "为多框架项目引入作用域 Token、表面、控件状态和可选微动效。",
+        "审计 Amicro 风格实现的技术栈兼容性、样式漂移、响应式和可访问性风险。"
+      ],
+      "install_methods": [
+        {
+          "label": "宿主 Skill 目录",
+          "description": "将运行版 ZIP 解压到宿主支持的 Skills 目录，例如项目级 .agents/skills/amicro-universal-frontend-style/。"
+        }
+      ],
+      "quick_start": {
+        "label": "显式调用",
+        "command": "$amicro-universal-frontend-style 把 src/pages/pricing.tsx 改成 Amicro 风格，保留现有品牌色、文案、组件 API 和业务逻辑。"
+      },
+      "documentation_url": "https://github.com/zengwenliang416/skills-hubs/blob/main/skills/amicro-universal-frontend-style/README.md",
+      "repository_url": "https://github.com/zengwenliang416/skills-hubs/tree/main/skills/amicro-universal-frontend-style"
     }
   ]
 }

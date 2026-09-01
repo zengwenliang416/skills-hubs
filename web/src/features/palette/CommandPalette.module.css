@@ -1,0 +1,139 @@
+.palette {
+  inline-size: min(92vw, 34rem);
+  margin: 20vh auto auto;
+  padding: var(--amicro-space-3);
+  border: 1px solid var(--amicro-border);
+  border-radius: var(--amicro-radius-card);
+  background: var(--amicro-surface-raised);
+  color: var(--amicro-text);
+  box-shadow: var(--amicro-shadow-float);
+}
+
+.palette::backdrop {
+  background: var(--amicro-overlay);
+}
+
+.inputRow {
+  display: flex;
+  align-items: center;
+  gap: var(--amicro-space-3);
+  min-block-size: var(--amicro-control-height);
+  padding-inline: var(--amicro-space-3);
+  border: 1px solid var(--amicro-border);
+  border-radius: var(--amicro-radius-control);
+  background: var(--amicro-surface);
+  color: var(--amicro-text-muted);
+}
+
+.inputRow:focus-within {
+  border-color: var(--amicro-border-strong);
+  box-shadow: var(--amicro-ring);
+}
+
+.input {
+  flex: 1;
+  min-inline-size: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--amicro-text);
+  font: inherit;
+  font-size: var(--amicro-font-size-base);
+}
+
+.input::placeholder {
+  color: var(--amicro-text-muted);
+}
+
+/* Focus ring lives on inputRow via focus-within. */
+.input:focus-visible {
+  outline: 2px solid transparent;
+}
+
+.kbd {
+  padding-inline: var(--amicro-space-2);
+  border: 1px solid var(--amicro-border);
+  border-radius: var(--amicro-radius-detail);
+  color: var(--amicro-text-muted);
+  font-family: var(--amicro-font-mono);
+  font-size: var(--amicro-font-size-xs);
+  line-height: var(--amicro-line-compact);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--amicro-space-1);
+  margin-block-start: var(--amicro-space-2);
+  max-block-size: calc(var(--amicro-space-16) * 4);
+  overflow-y: auto;
+  list-style: none;
+}
+
+.option {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--amicro-space-3);
+  padding: var(--amicro-space-3);
+  border-radius: var(--amicro-radius-control);
+  cursor: pointer;
+}
+
+.option[data-active='true'] {
+  background: var(--amicro-surface-hover);
+}
+
+.optionTitle {
+  font-size: var(--amicro-font-size-base);
+  font-weight: 500;
+  letter-spacing: var(--amicro-letter-tight);
+}
+
+.optionMeta {
+  color: var(--amicro-text-muted);
+  font-size: var(--amicro-font-size-xs);
+  white-space: nowrap;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--amicro-space-2);
+  padding-block: var(--amicro-space-8);
+  text-align: center;
+}
+
+.emptyTitle {
+  font-size: var(--amicro-font-size-base);
+  font-weight: 600;
+  letter-spacing: var(--amicro-letter-tight);
+}
+
+.emptyHint {
+  color: var(--amicro-text-muted);
+  font-size: var(--amicro-font-size-sm);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .palette[open] {
+    animation: paletteIn var(--amicro-duration-control) var(--amicro-ease-emphasized) both;
+  }
+
+  .option {
+    transition: background-color var(--amicro-duration-fast) var(--amicro-ease-standard);
+  }
+
+  @keyframes paletteIn {
+    from {
+      opacity: 0;
+      transform: translateY(calc(-1 * var(--amicro-space-2))) scale(0.98);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+}

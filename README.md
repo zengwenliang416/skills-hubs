@@ -7,10 +7,10 @@ Wenliang Zeng 常用且经过实际验证的 AI Agent Skills 集合。
 
 ## Skills
 
-| Skill | 版本 | 用途 | 安装 |
-| --- | --- | --- | --- |
-| [image-api-workbench](skills/image-api-workbench) | 2.0.1 | 通过 OpenAI Images API 或兼容网关生成、编辑、探测并验证图片 | `npm install --global image-api-workbench` |
-| [amicro-universal-frontend-style](skills/amicro-universal-frontend-style) | 1.1.0 | 将作用域 Amicro 风格、Token 和安全微交互迁移到现有前端 | `npm install --global amicro-universal-frontend-style` |
+| Skill                                                                     | 版本  | 用途                                                        | 安装                                                   |
+| ------------------------------------------------------------------------- | ----- | ----------------------------------------------------------- | ------------------------------------------------------ |
+| [image-api-workbench](skills/image-api-workbench)                         | 2.0.1 | 通过 OpenAI Images API 或兼容网关生成、编辑、探测并验证图片 | `npm install --global image-api-workbench`             |
+| [amicro-universal-frontend-style](skills/amicro-universal-frontend-style) | 1.1.0 | 将作用域 Amicro 风格、Token 和安全微交互迁移到现有前端      | `npm install --global amicro-universal-frontend-style` |
 
 ## 安装到 Codex
 
@@ -36,6 +36,28 @@ amicro-inspect-frontend --help
 amicro-style-layer --help
 amicro-verify-style --help
 amicro-generate-tokens --help
+```
+
+## Web 展示站
+
+`web/` 是仓库的 Amicro 风格展示前端（Vite + React + TypeScript），
+在构建期直接读取根目录 `catalog.json` 生成技能目录页，支持搜索、分类筛选、
+完整 Skill 详情、安装与文档入口，以及亮/暗/跟随系统三态主题。`server/` 是
+Rust + Axum + SQLite 统计服务，按 IP 统计访客和 Skill 行为、代理并缓存 npm
+官方下载量，并在生产模式同源托管前端。架构、设计模式与代码规范见
+[web/README.md](web/README.md) 和 [server/README.md](server/README.md)。
+
+```bash
+cd web
+npm install
+npm run build
+cd ..
+cargo run --manifest-path server/Cargo.toml
+
+# 开发模式：先启动上面的 Rust 服务，再在另一个终端运行
+cd web
+npm run dev        # /api 自动代理到 127.0.0.1:8080
+npm run test && npm run typecheck && npm run lint && npm run format:check
 ```
 
 ## 收录原则

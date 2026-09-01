@@ -1,0 +1,22 @@
+.root {
+  position: relative;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.perspective {
+  /* Camera distance for the tilt; a transform parameter, not a layout value. */
+  perspective: 800px;
+}
+
+.card3d {
+  block-size: 100%;
+  transform-style: preserve-3d;
+}
+
+.depth {
+  block-size: 100%;
+  transform-style: preserve-3d;
+  /* Original lifts children by translateZ(40px); we keep a calmer depth. */
+  transform: translateZ(var(--amicro-space-4));
+}

@@ -37,8 +37,13 @@
     "web"
   ],
   "test_paths": [
-    "server/src",
-    "web/src"
+    "cargo fmt --manifest-path server/Cargo.toml --check && cargo test --manifest-path server/Cargo.toml && cargo clippy --manifest-path server/Cargo.toml --all-targets -- -D warnings && cd web && npm run test && npm run typecheck && npm run lint && npm run format:check && npm run build && cd .. && python3 skills/amicro-universal-frontend-style/scripts/verify_amicro_style.py web --strict --format json && openspec validate skill-product-foundation --strict"
+  ],
+  "acceptance_assertions": [
+    "A1",
+    "A2",
+    "A3",
+    "A4"
   ],
   "non_goals": [
     "Do not expand scope beyond the active change.",

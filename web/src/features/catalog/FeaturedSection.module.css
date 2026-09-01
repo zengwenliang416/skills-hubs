@@ -1,0 +1,24 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--amicro-space-8);
+}
+
+.sectionHeader {
+  display: flex;
+  flex-direction: column;
+  gap: var(--amicro-space-2);
+}
+
+.title {
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: var(--amicro-line-compact);
+}
+
+.description {
+  max-inline-size: 40rem;
+  color: var(--amicro-text-muted);
+  font-size: var(--amicro-font-size-base);
+}

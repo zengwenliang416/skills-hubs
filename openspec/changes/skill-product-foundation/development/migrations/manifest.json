@@ -1,16 +1,37 @@
 {
   "schema_version": 1,
   "change_id": "skill-product-foundation",
-  "required": false,
-  "status": "not_required",
-  "migrations": [],
-  "rollback": [],
-  "rollback_strategy": "No database or seed migration is required for this change.",
+  "required": true,
+  "status": "ready",
+  "migrations": [
+    {
+      "id": "001-schema-v3",
+      "kind": "ddl",
+      "order": 1,
+      "path": "development/migrations/001-schema-v3.sql"
+    }
+  ],
+  "rollback": [
+    {
+      "id": "001-schema-v3-rollback",
+      "kind": "rollback",
+      "order": 1,
+      "path": "development/migrations/001-schema-v3-rollback.sql"
+    }
+  ],
+  "rollback_strategy": "The rollback drops only daily_skill_events and its index, resets user_version to 2, and intentionally discards Skill event aggregates while preserving daily_visits.",
   "verification": {
-    "commands": [],
-    "evidence": []
+    "commands": [
+      "sqlite3 ':memory:' \".read openspec/changes/skill-product-foundation/development/migrations/001-schema-v3.sql\" \"PRAGMA user_version;\"",
+      "sqlite3 ':memory:' \".read openspec/changes/skill-product-foundation/development/migrations/001-schema-v3.sql\" \".read openspec/changes/skill-product-foundation/development/migrations/001-schema-v3-rollback.sql\" \"PRAGMA user_version;\""
+    ],
+    "evidence": [
+      "Forward migration returns user_version 3 and creates daily_skill_events.",
+      "Rollback returns user_version 2 and removes daily_skill_events without changing daily_visits."
+    ]
   },
   "notes": [
-    "If any requirement, task, report, or handoff mentions SQL, DDL, DML, seed data, menus, permissions, or migrations, set required=true and add executable SQL files under development/migrations/."
+    "The Rust Store performs the same v2-to-v3 migration automatically at process startup.",
+    "Legacy v0/v1 UUID visit schema repair remains runtime logic because it requires inspecting the existing schema before rebuilding daily_visits."
   ]
 }

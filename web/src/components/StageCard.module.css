@@ -1,0 +1,156 @@
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--amicro-space-3);
+  padding: var(--amicro-space-3);
+  border: 1px solid var(--amicro-border);
+  border-radius: var(--amicro-radius-card);
+  background: var(--amicro-surface);
+  box-shadow: var(--amicro-shadow-sm);
+}
+
+.stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border: 1px solid var(--amicro-border);
+  border-radius: var(--amicro-radius-stage);
+  background: var(--amicro-stage);
+  color: var(--amicro-text-muted);
+}
+
+/* One-shot sheen band, clipped safely inside the stage. */
+.stage::after {
+  content: '';
+  position: absolute;
+  inset-block: calc(-1 * var(--amicro-space-6));
+  inline-size: 45%;
+  inset-inline-start: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--amicro-text) 10%, transparent),
+    transparent
+  );
+  opacity: 0;
+  transform: translateX(-180%) skewX(-16deg);
+  pointer-events: none;
+}
+
+/*
+ * Pointer-tracking radial glow (rendered only for fine pointers with motion
+ * allowed). Follows via --spotlight-x/y set from JS; clipped by the stage's
+ * overflow and radius, so it never touches text or the focus ring.
+ */
+.spotlight {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  inline-size: calc(var(--amicro-card-reference-width) * 0.9);
+  block-size: calc(var(--amicro-card-reference-width) * 0.9);
+  border-radius: var(--amicro-radius-pill);
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--amicro-text) 6%, transparent),
+    transparent 70%
+  );
+  opacity: 0;
+  transform: translate(var(--spotlight-x, 50%), var(--spotlight-y, 50%)) translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.footer {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--amicro-space-3);
+  padding-inline: var(--amicro-space-1);
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--amicro-space-1);
+  min-inline-size: 0;
+}
+
+.title {
+  font-size: var(--amicro-font-size-base);
+  font-weight: 600;
+  letter-spacing: var(--amicro-letter-tight);
+  line-height: var(--amicro-line-compact);
+}
+
+.meta {
+  font-size: var(--amicro-font-size-xs);
+  color: var(--amicro-text-muted);
+}
+
+.action {
+  flex: none;
+}
+
+@media (hover: hover) {
+  .card:hover {
+    border-color: var(--amicro-border-strong);
+    background: var(--amicro-surface-raised);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .card {
+    transition:
+      transform var(--amicro-duration-card) var(--amicro-ease-emphasized),
+      border-color var(--amicro-duration-fast) var(--amicro-ease-standard),
+      background-color var(--amicro-duration-fast) var(--amicro-ease-standard);
+  }
+
+  @keyframes cardSheen {
+    0% {
+      opacity: 0;
+      transform: translateX(-180%) skewX(-16deg);
+    }
+
+    25% {
+      opacity: 1;
+    }
+
+    100% {
+      opacity: 0;
+      transform: translateX(380%) skewX(-16deg);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) and (hover: hover) {
+  .card:hover {
+    transform: translateY(-2px);
+  }
+
+  /* One sweep per hover/focus entry, then it rests. */
+  .card:hover .stage::after,
+  .card:focus-within .stage::after {
+    animation: cardSheen calc(var(--amicro-duration-section) * 5 / 4) var(--amicro-ease-emphasized)
+      both;
+  }
+}
+
+@media (hover: hover) {
+  .stage:hover .spotlight {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .spotlight {
+    transition: opacity var(--amicro-duration-fast) var(--amicro-ease-standard);
+  }
+
+  /* Press feedback: faster and smaller than the hover lift. */
+  .card:active {
+    transform: scale(0.98);
+  }
+}

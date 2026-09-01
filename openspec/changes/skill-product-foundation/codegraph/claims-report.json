@@ -1,0 +1,16 @@
+{
+  "schema": "specnav.codegraph.claims_report.v1",
+  "generated_at": "2026-09-01T06:54:28.879Z",
+  "active_change": "skill-product-foundation",
+  "claims_file": "openspec/changes/skill-product-foundation/codegraph/claims-map.json",
+  "evidence_index": "openspec/changes/skill-product-foundation/codegraph/evidence-index.json",
+  "claims_count": 1,
+  "verified_claims": [],
+  "unverified_claims": [
+    "development:task-001-product-foundation"
+  ],
+  "blockers": [],
+  "warnings": [
+    "codegraph:claim-unverified:development:task-001-product-foundation"
+  ]
+}

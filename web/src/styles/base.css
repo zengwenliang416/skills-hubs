@@ -1,0 +1,141 @@
+/*
+ * Minimal reset + Amicro-scoped page shell.
+ * All design values come from amicro-tokens.css; nothing here competes with it.
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-inline-size: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+dl,
+dd,
+ul,
+ol,
+figure {
+  margin: 0;
+}
+
+ul,
+ol {
+  padding: 0;
+}
+
+img,
+svg {
+  display: block;
+  max-inline-size: 100%;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+a {
+  color: inherit;
+}
+
+/* The token scope root doubles as the page canvas. */
+#root {
+  display: flex;
+  flex-direction: column;
+  min-block-size: 100vh;
+  min-block-size: 100dvh;
+  background: var(--amicro-page);
+  color: var(--amicro-text);
+  font-family: var(--amicro-font-sans);
+  font-size: var(--amicro-font-size-base);
+  line-height: var(--amicro-line-body);
+  letter-spacing: -0.01em;
+}
+
+:where([data-amicro-root]) main {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(48px, 8vw, 96px);
+  inline-size: 100%;
+  max-inline-size: 72rem;
+  margin-inline: auto;
+  padding-inline: clamp(16px, 4vw, 48px);
+  padding-block: clamp(48px, 8vw, 96px);
+}
+
+/* Independent, always-visible keyboard focus indicator. */
+:where([data-amicro-root]) :focus-visible {
+  outline: 2px solid var(--amicro-focus);
+  outline-offset: 2px;
+}
+
+:where([data-amicro-root]) section[id] {
+  scroll-margin-block-start: var(--amicro-space-20);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/*
+ * Decorative ambient loops (data-ambient) pause when their card is offscreen
+ * or the tab is hidden (data-ambient-paused), and while a modal is open.
+ */
+:where([data-amicro-root]) [data-ambient-paused='true'] [data-ambient],
+:where([data-amicro-root]):has(dialog[open]) [data-ambient] {
+  animation-play-state: paused;
+}
+
+/* Reduced-motion emergency stop: every state change becomes instant. */
+@media (prefers-reduced-motion: reduce) {
+  :where([data-amicro-root]) *,
+  :where([data-amicro-root]) *::before,
+  :where([data-amicro-root]) *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/*
+ * Signature theme reveal: the new root snapshot covers the old one with a
+ * circle growing from the toggle button (--theme-reveal-x/y, set in JS).
+ * Only reachable when JS starts a view transition, which is already gated on
+ * API support and prefers-reduced-motion: no-preference.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root) {
+    animation: none;
+  }
+
+  ::view-transition-new(root) {
+    animation: themeReveal var(--amicro-duration-section) var(--amicro-ease-curtain) both;
+  }
+
+  @keyframes themeReveal {
+    from {
+      clip-path: circle(0% at var(--theme-reveal-x, 50%) var(--theme-reveal-y, 50%));
+    }
+
+    to {
+      clip-path: circle(
+        var(--theme-reveal-radius, 150vmax) at var(--theme-reveal-x, 50%) var(--theme-reveal-y, 50%)
+      );
+    }
+  }
+}

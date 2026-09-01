@@ -11,11 +11,11 @@ current catalog.
 
 #### Scenario: Unknown event or Skill
 - **WHEN** a request contains an unknown event type or Skill name
-- **THEN** the backend returns HTTP 400 and does not write an event row
+- **THEN** the backend returns HTTP 422 and does not write an event row
 
 #### Scenario: Unexpected request field
 - **WHEN** an event request contains a field outside the fixed schema
-- **THEN** the backend returns HTTP 400
+- **THEN** the backend returns HTTP 422
 
 ### Requirement: Behavior data uses daily IP aggregation
 The backend MUST resolve the visitor IP using the existing proxy policy and
