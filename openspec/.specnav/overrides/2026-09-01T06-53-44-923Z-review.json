@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "gate": "review",
+  "reason": "Independent backend, spec, and quality reviews approved the first-phase catalog, Rust analytics, SQLite migration, npm metrics, and frontend package changes.",
+  "requested_by": "codex",
+  "created_at": "2026-09-01T06:53:44.923Z",
+  "expires_at": "2026-09-01T08:53:44.923Z",
+  "active_change": "skill-product-foundation"
+}

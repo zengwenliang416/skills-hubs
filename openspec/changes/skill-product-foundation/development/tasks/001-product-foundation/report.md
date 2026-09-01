@@ -40,7 +40,7 @@ DONE
 ## Concerns
 
 - Browser reduced-motion media emulation was not available through the connected Chrome surface; reduced-motion safety is supported by the runtime guard and Amicro strict static evidence and remains a Verification sensory case.
-- The implementation commit is authorized; SpecNav current-HEAD receipts and task acceptance must be generated immediately after that fixed snapshot exists.
+- SpecNav current-HEAD validation is bound to commit `76e328e798202f26e2e311668743cf7f6970838f`; the remaining reduced-motion runtime check belongs to Verification sensory execution.
 
 ## Scope Deviations
 
@@ -48,8 +48,8 @@ DONE
 
 ## Follow-up Needed
 
-- Create the authorized implementation commit, run `refresh-current-head`, materialize task acceptance, and rerun the development handoff contract.
+- Keep task acceptance and the development handoff bound to the signed current-HEAD receipt for `76e328e798202f26e2e311668743cf7f6970838f`.
 
 ## Adjudication
 
-Implementation and local validation are complete. Verification handoff remains gated only by generating evidence against the authorized implementation commit and the later sensory reduced-motion case.
+Implementation and signed current-HEAD validation are complete. The later reduced-motion browser case remains explicitly assigned to Verification.

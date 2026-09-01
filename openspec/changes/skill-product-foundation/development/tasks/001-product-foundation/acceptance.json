@@ -1,0 +1,127 @@
+{
+  "schema": "specnav.task-acceptance-evidence.v2",
+  "generated_by": "specnav-development/task-acceptance-evidence",
+  "task_id": "001-product-foundation",
+  "generated_at": "2026-09-01T06:57:07.492Z",
+  "recorded_at": "2026-09-01T06:56:09.326Z",
+  "status": "approved",
+  "reviewed_git_head": "76e328e798202f26e2e311668743cf7f6970838f",
+  "reviewed_git_tree": "b447cdc2f27339a5d6c90867cf1a8d7060632253",
+  "implementation_scope": {
+    "included_patterns": [
+      ".gitignore",
+      "README.md",
+      "catalog.json",
+      "server",
+      "web"
+    ],
+    "entries": [
+      {
+        "path": ".gitignore",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "d8a853c2c800303f89c975d4fbbbd5ac13a5aa17"
+      },
+      {
+        "path": "catalog.json",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "2b0d10df54f9df943853346a4ed460b75928c2c2"
+      },
+      {
+        "path": "README.md",
+        "mode": "100644",
+        "type": "blob",
+        "object_id": "1d70ae275abe8dfc95fb4379f1598bda4d78c0b5"
+      }
+    ],
+    "sha256": "c8555ee0100b835e439e659f80020195df2632484efc44be1b02d10fca6f3c47"
+  },
+  "artifacts": {
+    "context": {
+      "path": "development/tasks/001-product-foundation/context.json",
+      "sha256": "faef778794013b288853bff41c2f410be175cd5049bf2e392cc2993172b83b5a"
+    },
+    "report": {
+      "path": "development/tasks/001-product-foundation/report.md",
+      "sha256": "790c7e39533a141e6d6341fccf327363d51fc017ada7528fa2e051ff9edefd61",
+      "status": "DONE"
+    },
+    "spec_review": {
+      "path": "development/tasks/001-product-foundation/spec-review.md",
+      "sha256": "87d23636cb7ae71e513f830b8ec0ee5a781a558b9b55eb05af4650dd28a144ca",
+      "verdict": "approved"
+    },
+    "quality_review": {
+      "path": "development/tasks/001-product-foundation/quality-review.md",
+      "sha256": "3c03d0146563db93f3a9df11c3493d7d541f159062e3664120f3d4b890eb7416",
+      "verdict": "approved"
+    }
+  },
+  "test_runs": [
+    {
+      "id": "receipt-8c267b10c03aa00d0b357c5b2d32ec969f118fe177100f39e9522bf56c5eec7b",
+      "command": "cargo fmt --manifest-path server/Cargo.toml --check && cargo test --manifest-path server/Cargo.toml && cargo clippy --manifest-path server/Cargo.toml --all-targets -- -D warnings && cd web && npm run test && npm run typecheck && npm run lint && npm run format:check && npm run build && cd .. && python3 skills/amicro-universal-frontend-style/scripts/verify_amicro_style.py web --strict --format json && openspec validate skill-product-foundation --strict",
+      "assertion_ids": [
+        "A1",
+        "A2",
+        "A3",
+        "A4"
+      ],
+      "recorded_at": "2026-09-01T06:56:09.326Z",
+      "validation_receipt_sha256": "96d1b617f8e333391b2dfd488aff326c12fff5bbccacae6c94b13575fcbe265a",
+      "evidence_log": {
+        "path": "development/evidence/001-001-product-foundation.log",
+        "sha256": "9cc8de1d24b35dd9e0486d8b1278ca8edbeff61d3ad68b73ad5688611635632b",
+        "size": 7589
+      }
+    }
+  ],
+  "assertions": [
+    {
+      "id": "A1",
+      "parent_id": "A1",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-8c267b10c03aa00d0b357c5b2d32ec969f118fe177100f39e9522bf56c5eec7b"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "Skill details expose factual decision and installation content from the catalog."
+    },
+    {
+      "id": "A2",
+      "parent_id": "A2",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-8c267b10c03aa00d0b357c5b2d32ec969f118fe177100f39e9522bf56c5eec7b"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "Fixed Skill behavior events are validated, stored by daily IP aggregate, and returned only as aggregates."
+    },
+    {
+      "id": "A3",
+      "parent_id": "A3",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-8c267b10c03aa00d0b357c5b2d32ec969f118fe177100f39e9522bf56c5eec7b"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "Skill engagement and partial npm availability are represented accurately in the metrics UI."
+    },
+    {
+      "id": "A4",
+      "parent_id": "A4",
+      "status": "passing",
+      "test_run_ids": [
+        "receipt-8c267b10c03aa00d0b357c5b2d32ec969f118fe177100f39e9522bf56c5eec7b"
+      ],
+      "direct_evidence": [],
+      "reused_evidence": [],
+      "claim": "The expanded detail remains responsive, accessible, theme-compatible, and reduced-motion safe."
+    }
+  ],
+  "fallback_used": false
+}

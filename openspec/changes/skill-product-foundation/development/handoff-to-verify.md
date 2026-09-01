@@ -51,17 +51,17 @@
 - Frontend tests/typecheck/lint/format/build passed.
 - Amicro strict passed across 58 files with no findings.
 - OpenSpec strict and executable migration/rollback checks passed.
+- SpecNav replayed the full validation command successfully against commit `76e328e798202f26e2e311668743cf7f6970838f` and recorded a signed current-HEAD receipt.
 - Browser checks passed for desktop detail/copy/focus/theme/metrics and 320px layout/detail/internal scrolling; console contained no warnings or errors.
 
 ## Known Risks
 
 - The Chrome surface did not expose reduced-motion media emulation, so live reduced-motion sensory execution is deferred while static/runtime guards are present.
-- The implementation commit is authorized; current-HEAD signed validation receipts and task acceptance will be generated against that fixed snapshot.
 - npm returns `404` for `amicro-universal-frontend-style`; the UI intentionally reports partial data instead of zero.
 
 ## Items Requiring Six-Domain Verification
 
-- Replay the committed current-HEAD validation command and bind signed receipts.
+- Preserve the signed validation and task-acceptance bindings to commit `76e328e798202f26e2e311668743cf7f6970838f`.
 - Execute the approved E2E cases against a clean committed build.
 - Emulate reduced motion and inspect all animated states.
 - Reconfirm 320/360/768/desktop layouts, light/dark/auto themes, focus order, touch targets, and outbound navigation.

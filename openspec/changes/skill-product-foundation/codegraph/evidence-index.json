@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.evidence_index.v1",
-  "generated_at": "2026-09-01T06:54:28.877Z",
+  "generated_at": "2026-09-01T06:57:15.967Z",
   "active_change": "skill-product-foundation",
   "source_raw": "openspec/changes/skill-product-foundation/codegraph/evidence.jsonl",
   "by_claim": {},

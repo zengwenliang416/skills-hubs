@@ -1,6 +1,6 @@
 {
   "schema": "specnav.codegraph.guard_report.v1",
-  "generated_at": "2026-09-01T06:54:28.879Z",
+  "generated_at": "2026-09-01T06:57:15.969Z",
   "active_change": "skill-product-foundation",
   "stage": "development",
   "ok": true,
@@ -17,7 +17,7 @@
     "cli": {
       "available": true,
       "version": "1.3.1",
-      "path": "/Users/wenliang_zeng/.local/bin/codegraph",
+      "path": "<home>/.local/bin/codegraph",
       "unsupported": false,
       "error": null
     },
@@ -26,13 +26,13 @@
       "visible_in_current_session": false,
       "restart_required": true,
       "config_files": [
-        "/Users/wenliang_zeng/.claude.json",
-        "/Users/wenliang_zeng/.codex/config.toml"
+        "<home>/.claude.json",
+        "<home>/.codex/config.toml"
       ]
     },
     "index": {
       "initialized": false,
-      "projectPath": "/Volumes/zwl/open_sources/skills-hubs",
+      "projectPath": "<repo>",
       "indexPath": null,
       "lastIndexed": null,
       "fileCount": 0,
@@ -63,7 +63,7 @@
   },
   "evidence_index": {
     "schema": "specnav.codegraph.evidence_index.v1",
-    "generated_at": "2026-09-01T06:54:28.877Z",
+    "generated_at": "2026-09-01T06:57:15.967Z",
     "active_change": "skill-product-foundation",
     "source_raw": "openspec/changes/skill-product-foundation/codegraph/evidence.jsonl",
     "by_claim": {},
@@ -74,7 +74,7 @@
   },
   "claims_report": {
     "schema": "specnav.codegraph.claims_report.v1",
-    "generated_at": "2026-09-01T06:54:28.879Z",
+    "generated_at": "2026-09-01T06:57:15.969Z",
     "active_change": "skill-product-foundation",
     "claims_file": "openspec/changes/skill-product-foundation/codegraph/claims-map.json",
     "evidence_index": "openspec/changes/skill-product-foundation/codegraph/evidence-index.json",
