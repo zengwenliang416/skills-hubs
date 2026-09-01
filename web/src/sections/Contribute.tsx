@@ -4,12 +4,12 @@ import styles from './Contribute.module.css'
 
 const REPO = 'https://github.com/zengwenliang416/skills-hubs'
 
-// Only link docs that exist on origin/main; web/README.md is unpublished until
-// the web/server commits are pushed — restore a "前端架构" entry after that.
+// Only link docs that exist on origin/main.
 const DOC_LINKS = [
   { label: '收录原则', note: 'README.md', href: `${REPO}/blob/main/README.md` },
   { label: '发布流程', note: 'docs/RELEASING.md', href: `${REPO}/blob/main/docs/RELEASING.md` },
   { label: '仓库规范', note: 'AGENTS.md', href: `${REPO}/blob/main/AGENTS.md` },
+  { label: '前端架构', note: 'web/README.md', href: `${REPO}/blob/main/web/README.md` },
 ] as const
 
 /** Contribution and governance pointers; all links go to real repo docs. */
