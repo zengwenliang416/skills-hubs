@@ -70,29 +70,54 @@ image-api-workbench \
 
 ## Configuration
 
-Secret/config resolution:
+Create a named gateway profile:
 
-1. CLI `--token-file` and `--base-url`;
+```bash
+image-api-workbench \
+  --profile pftrader \
+  --base-url https://gateway.example.com/v1 \
+  --model gpt-image-2 \
+  --timeout-seconds 1200 \
+  --configure
+```
+
+The default profile file is `~/.config/image-api-workbench/config.json`. It is
+written atomically with `0600` permissions and may contain only `base_url`,
+`model`, `timeout_seconds`, and a `token_file` path. API keys are rejected.
+
+Inspect the final effective configuration before diagnosing a gateway:
+
+```bash
+image-api-workbench --profile pftrader --show-config
+```
+
+The output reports the selected profile, generation/edit/models endpoints,
+credential availability, and the source of every field without exposing key
+contents.
+
+Configuration precedence:
+
+1. explicit CLI options;
 2. current process environment;
-3. `<cwd>/.content-skills/.env`;
-4. `~/.content-skills/.env`;
-5. `/root/.openclaw/new-api.token` when present.
+3. selected profile;
+4. `<cwd>/.content-skills/.env`;
+5. `~/.content-skills/.env`;
+6. built-in defaults, including `/root/.openclaw/new-api.token` when present.
 
 Supported environment variables:
 
 ```text
-NEWAPI_API_KEY
-NEW_API_KEY
-OPENAI_API_KEY
+IMAGE_API_CONFIG_FILE
+IMAGE_API_PROFILE
+IMAGE_API_MODEL
 IMAGE_API_KEY
-NEWAPI_BASE_URL
-OPENAI_BASE_URL
-OPENAI_API_BASE
 IMAGE_API_BASE_URL
-NEWAPI_TOKEN_FILE
 IMAGE_API_TOKEN_FILE
 IMAGE_API_TIMEOUT_SECONDS
 ```
+
+Only the `IMAGE_API_*` names above are supported. Unknown or older provider-
+specific environment variables are ignored.
 
 Prefer an environment variable or a permission-restricted token file. Do not
 put keys in prompts, shell history, skill files, reports, metadata, or memory.
@@ -120,6 +145,10 @@ put keys in prompts, shell history, skill files, reports, metadata, or memory.
 --partial-dir DIR
 --metadata-out PATH|none
 --include-prompt-preview
+--config-file PATH
+--profile NAME
+--configure
+--show-config
 --list-model-profiles
 --list-size-presets
 --list-remote-models
@@ -129,6 +158,16 @@ put keys in prompts, shell history, skill files, reports, metadata, or memory.
 Known-model validation is strict by default. Use
 `--allow-provider-extensions` only after checking the target gateway's
 documentation and exact endpoint behavior.
+
+## HTTP 524 Diagnosis
+
+`524` is distinct from the CLI's own socket timeout. It means an intermediary
+gateway stopped waiting for the image upstream, often before
+`--timeout-seconds` is reached. The CLI reports `error_type`,
+`client_timeout_seconds`, `elapsed_ms`, safe response headers, and recommended
+actions. Check `--show-config`, gateway image-channel health, upstream latency,
+and the gateway proxy timeout before retrying. Do not replay a broad image job
+until confirming that the previous upstream job did not finish.
 
 ## Bilingual Review
 

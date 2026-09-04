@@ -5,6 +5,7 @@ from __future__ import annotations
 import base64
 import json
 import os
+import stat
 import struct
 import subprocess
 import tempfile
@@ -60,6 +61,14 @@ class ApiHandler(BaseHTTPRequestHandler):
                 "body": body,
             }
         )
+        if self.path == "/v1/images/generations" and b'"prompt": "force 524"' in body:
+            self.send_response(524)
+            self.send_header("Content-Type", "text/plain")
+            self.send_header("Server", "test-gateway")
+            self.send_header("CF-Ray", "test-ray")
+            self.end_headers()
+            self.wfile.write(b"upstream image timeout")
+            return
         if self.path == "/v1/images/generations" and b'"stream": true' in body:
             encoded = base64.b64encode(self.png).decode()
             events = [
@@ -101,10 +110,16 @@ class Server:
 
 def run_cli(args: list[str], *, env: dict[str, str] | None = None) -> subprocess.CompletedProcess[str]:
     merged = os.environ.copy()
-    merged.pop("NEWAPI_API_KEY", None)
-    merged.pop("NEW_API_KEY", None)
-    merged.pop("OPENAI_API_KEY", None)
-    merged.pop("IMAGE_API_KEY", None)
+    for name in (
+        "IMAGE_API_BASE_URL",
+        "IMAGE_API_CONFIG_FILE",
+        "IMAGE_API_KEY",
+        "IMAGE_API_MODEL",
+        "IMAGE_API_PROFILE",
+        "IMAGE_API_TIMEOUT_SECONDS",
+        "IMAGE_API_TOKEN_FILE",
+    ):
+        merged.pop(name, None)
     merged.update(env or {})
     return subprocess.run(
         ["python3", str(CLI), *args],
@@ -117,6 +132,174 @@ def run_cli(args: list[str], *, env: dict[str, str] | None = None) -> subprocess
 
 
 class ImageApiWorkbenchTests(unittest.TestCase):
+    def test_configure_profile_writes_secure_secret_free_config(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            config = Path(tmp) / "config.json"
+            result = run_cli(
+                [
+                    "--config-file",
+                    str(config),
+                    "--profile",
+                    "slow-gateway",
+                    "--base-url",
+                    "https://images.example.com/v1",
+                    "--model",
+                    "gpt-image-2",
+                    "--timeout-seconds",
+                    "180",
+                    "--token-file",
+                    "/secure/image-api.token",
+                    "--configure",
+                ],
+                env={"IMAGE_API_KEY": "must-not-be-persisted"},
+            )
+            self.assertEqual(result.returncode, 0, result.stdout)
+            payload = json.loads(config.read_text())
+            self.assertEqual(payload["default_profile"], "slow-gateway")
+            self.assertEqual(payload["profiles"]["slow-gateway"]["timeout_seconds"], 180)
+            self.assertNotIn("api_key", config.read_text().lower())
+            self.assertNotIn("must-not-be-persisted", config.read_text())
+            self.assertEqual(stat.S_IMODE(config.stat().st_mode), 0o600)
+
+    def test_show_config_reports_sources_without_exposing_secret(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            config = Path(tmp) / "config.json"
+            config.write_text(
+                json.dumps(
+                    {
+                        "version": 1,
+                        "default_profile": "profile-a",
+                        "profiles": {
+                            "profile-a": {
+                                "base_url": "https://profile.example.com/v1",
+                                "model": "profile-model",
+                                "timeout_seconds": 90,
+                            }
+                        },
+                    }
+                )
+            )
+            result = run_cli(
+                ["--config-file", str(config), "--base-url", "https://cli.example.com/v1", "--show-config"],
+                env={
+                    "IMAGE_API_KEY": "show-config-secret",
+                    "IMAGE_API_MODEL": "env-model",
+                },
+            )
+        self.assertEqual(result.returncode, 0, result.stdout)
+        payload = json.loads(result.stdout)
+        self.assertEqual(payload["values"]["base_url"], "https://cli.example.com/v1")
+        self.assertEqual(payload["values"]["model"], "env-model")
+        self.assertEqual(payload["values"]["timeout_seconds"], 90)
+        self.assertEqual(payload["sources"]["base_url"], "cli:--base-url")
+        self.assertTrue(payload["sources"]["model"].startswith("env:IMAGE_API_MODEL@"))
+        self.assertIn("#profiles.profile-a.timeout_seconds", payload["sources"]["timeout_seconds"])
+        self.assertNotIn("show-config-secret", result.stdout)
+
+    def test_profile_overrides_dotenv_but_process_env_overrides_profile(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            home = Path(tmp) / "home"
+            dotenv_dir = home / ".content-skills"
+            dotenv_dir.mkdir(parents=True)
+            (dotenv_dir / ".env").write_text(
+                'IMAGE_API_BASE_URL="https://dotenv.example.com/v1"\n'
+                "IMAGE_API_MODEL=dotenv-model\n"
+            )
+            config = Path(tmp) / "config.json"
+            config.write_text(
+                json.dumps(
+                    {
+                        "version": 1,
+                        "default_profile": "profile-a",
+                        "profiles": {
+                            "profile-a": {
+                                "base_url": "https://profile.example.com/v1",
+                                "model": "profile-model",
+                                "timeout_seconds": 90,
+                            }
+                        },
+                    }
+                )
+            )
+            profile_result = run_cli(
+                ["--config-file", str(config), "--show-config"],
+                env={"HOME": str(home)},
+            )
+            process_result = run_cli(
+                ["--config-file", str(config), "--show-config"],
+                env={
+                    "HOME": str(home),
+                    "IMAGE_API_BASE_URL": "https://process.example.com/v1",
+                },
+            )
+        self.assertEqual(profile_result.returncode, 0, profile_result.stdout)
+        profile_payload = json.loads(profile_result.stdout)
+        self.assertEqual(profile_payload["values"]["base_url"], "https://profile.example.com/v1")
+        self.assertEqual(profile_payload["values"]["model"], "profile-model")
+        self.assertIn("#profiles.profile-a.base_url", profile_payload["sources"]["base_url"])
+        self.assertEqual(process_result.returncode, 0, process_result.stdout)
+        process_payload = json.loads(process_result.stdout)
+        self.assertEqual(process_payload["values"]["base_url"], "https://process.example.com/v1")
+        self.assertTrue(process_payload["sources"]["base_url"].startswith("env:IMAGE_API_BASE_URL@"))
+
+    def test_config_rejects_secret_fields(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            profile_config = Path(tmp) / "profile-config.json"
+            profile_config.write_text(
+                json.dumps(
+                    {
+                        "version": 1,
+                        "profiles": {
+                            "unsafe": {
+                                "base_url": "https://images.example.com/v1",
+                                "api_key": "do-not-store-this",
+                            }
+                        },
+                    }
+                )
+            )
+            root_config = Path(tmp) / "root-config.json"
+            root_config.write_text(
+                json.dumps(
+                    {
+                        "version": 1,
+                        "profiles": {},
+                        "api_key": "also-do-not-store-this",
+                    }
+                )
+            )
+            profile_result = run_cli(
+                ["--config-file", str(profile_config), "--profile", "unsafe", "--show-config"]
+            )
+            root_result = run_cli(["--config-file", str(root_config), "--show-config"])
+        for result in (profile_result, root_result):
+            self.assertEqual(result.returncode, 2)
+            self.assertIn("API keys must remain", result.stdout)
+            self.assertNotIn("do-not-store-this", result.stdout)
+
+    def test_http_524_is_classified_as_gateway_timeout(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp, Server() as base_url:
+            result = run_cli(
+                [
+                    "--base-url",
+                    base_url,
+                    "--prompt",
+                    "force 524",
+                    "--out",
+                    str(Path(tmp) / "timeout.png"),
+                    "--timeout-seconds",
+                    "30",
+                ],
+                env={"IMAGE_API_KEY": "test-key"},
+            )
+        self.assertEqual(result.returncode, 2, result.stdout)
+        payload = json.loads(result.stdout)
+        self.assertEqual(payload["http_status"], 524)
+        self.assertEqual(payload["error_type"], "gateway_or_upstream_timeout")
+        self.assertEqual(payload["client_timeout_seconds"], 30)
+        self.assertIn("intermediary gateway", payload["diagnosis"])
+        self.assertEqual(payload["response_headers"]["cf-ray"], "test-ray")
+
     def test_gpt_image_2_transparency_is_allowed(self) -> None:
         result = run_cli(
             [

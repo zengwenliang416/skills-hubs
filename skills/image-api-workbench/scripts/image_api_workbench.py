@@ -9,6 +9,7 @@ import hashlib
 import json
 import os
 import re
+import socket
 import stat
 import struct
 import sys
@@ -21,16 +22,23 @@ from urllib.parse import urlparse
 from urllib.request import Request, urlopen
 
 
-VERSION = "2.0.1"
+VERSION = "2.1.0"
 SCRIPT_INTERFACE = "cli"
 DEFAULT_BASE_URL = "http://127.0.0.1:3000/v1"
 DEFAULT_TOKEN_FILE = Path("/root/.openclaw/new-api.token")
+DEFAULT_CONFIG_FILE = Path.home() / ".config/image-api-workbench/config.json"
 DEFAULT_MODEL = "gpt-image-2"
 DEFAULT_TIMEOUT_SECONDS = 1200
+CONFIG_VERSION = 1
+CONFIG_ROOT_FIELDS = {"version", "default_profile", "profiles"}
+CONFIG_PROFILE_FIELDS = {"base_url", "model", "timeout_seconds", "token_file"}
 DEFAULT_MAX_DOWNLOAD_BYTES = 64 * 1024 * 1024
 MAX_PROMPT_CHARS = 32_000
 MAX_INPUT_IMAGES = 16
 MAX_INPUT_BYTES = 50 * 1024 * 1024
+CANONICAL_BASE_URL_ENV = "IMAGE_API_BASE_URL"
+CANONICAL_API_KEY_ENV = "IMAGE_API_KEY"
+CANONICAL_TOKEN_FILE_ENV = "IMAGE_API_TOKEN_FILE"
 KNOWN_IMAGE_FORMATS = {"png", "jpeg", "webp"}
 RESERVED_PARAMS = {
     "model",
@@ -131,7 +139,9 @@ MODEL_PROFILES = {
 
 
 class CliError(RuntimeError):
-    pass
+    def __init__(self, message: str, *, details: dict[str, Any] | None = None) -> None:
+        super().__init__(message)
+        self.details = details or {}
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -146,7 +156,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--edit", action="store_true")
     parser.add_argument("--input-image", "--image", "--reference-image", action="append", default=[])
     parser.add_argument("--mask")
-    parser.add_argument("--model", default=DEFAULT_MODEL)
+    parser.add_argument("--model")
     parser.add_argument("--size", default="auto")
     parser.add_argument("--quality", choices=("auto", "low", "medium", "high"), default="auto")
     parser.add_argument("--n", type=int, default=1)
@@ -160,27 +170,13 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--stream", action="store_true")
     parser.add_argument("--partial-images", type=int, default=0)
     parser.add_argument("--partial-dir")
-    parser.add_argument(
-        "--base-url",
-        default=first_env(
-            "IMAGE_API_BASE_URL",
-            "NEWAPI_IMAGE_BASE_URL",
-            "NEWAPI_BASE_URL",
-            "OPENAI_BASE_URL",
-            "OPENAI_API_BASE",
-        )
-        or DEFAULT_BASE_URL,
-    )
-    parser.add_argument(
-        "--token-file",
-        default=first_env("IMAGE_API_TOKEN_FILE", "NEWAPI_TOKEN_FILE")
-        or (str(DEFAULT_TOKEN_FILE) if DEFAULT_TOKEN_FILE.exists() else ""),
-    )
-    parser.add_argument(
-        "--timeout-seconds",
-        type=int,
-        default=number_from_env("IMAGE_API_TIMEOUT_SECONDS", DEFAULT_TIMEOUT_SECONDS),
-    )
+    parser.add_argument("--base-url")
+    parser.add_argument("--token-file")
+    parser.add_argument("--timeout-seconds", type=int)
+    parser.add_argument("--config-file")
+    parser.add_argument("--profile")
+    parser.add_argument("--configure", action="store_true")
+    parser.add_argument("--show-config", action="store_true")
     parser.add_argument("--max-download-bytes", type=int, default=DEFAULT_MAX_DOWNLOAD_BYTES)
     parser.add_argument("--metadata-out")
     parser.add_argument("--include-prompt-preview", action="store_true")
@@ -206,22 +202,17 @@ def first_env(*names: str) -> str:
     return ""
 
 
-def number_from_env(name: str, fallback: int) -> int:
-    try:
-        value = int(os.environ.get(name, ""))
-    except ValueError:
-        return fallback
-    return value if value > 0 else fallback
-
-
-def load_env_defaults() -> None:
+def load_env_defaults() -> dict[str, str]:
     original = set(os.environ)
+    sources = {name: "process-environment" for name in original}
     for path in (Path.home() / ".content-skills/.env", Path.cwd() / ".content-skills/.env"):
         if not path.exists():
             continue
         for key, value in parse_env_file(path).items():
             if key not in original:
                 os.environ[key] = value
+                sources[key] = str(path)
+    return sources
 
 
 def parse_env_file(path: Path) -> dict[str, str]:
@@ -241,6 +232,286 @@ def parse_env_file(path: Path) -> dict[str, str]:
             value = re.sub(r"\s+#.*$", "", value)
         values[key] = value
     return values
+
+
+def first_env_with_source(
+    names: tuple[str, ...],
+    env_sources: dict[str, str],
+    *,
+    process_only: bool | None = None,
+) -> tuple[str, str]:
+    for name in names:
+        value = os.environ.get(name)
+        if value:
+            origin = env_sources.get(name, "process-environment")
+            if process_only is True and origin != "process-environment":
+                continue
+            if process_only is False and origin == "process-environment":
+                continue
+            return value, f"env:{name}@{origin}"
+    return "", ""
+
+
+def load_config_file(path: Path) -> dict[str, Any]:
+    if not path.exists():
+        return {"version": CONFIG_VERSION, "profiles": {}}
+    if not path.is_file() or path.is_symlink():
+        raise CliError(f"config file must be a regular file: {path}")
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise CliError(f"invalid config JSON at {path}: {exc.msg}") from exc
+    if not isinstance(value, dict):
+        raise CliError(f"config root must be an object: {path}")
+    unknown_root = set(value) - CONFIG_ROOT_FIELDS
+    if unknown_root:
+        raise CliError(
+            f"config root has unsupported fields: {', '.join(sorted(unknown_root))}; "
+            "API keys must remain in environment variables or token files"
+        )
+    if value.get("version") != CONFIG_VERSION:
+        raise CliError(f"unsupported config version at {path}; expected {CONFIG_VERSION}")
+    profiles = value.get("profiles")
+    if not isinstance(profiles, dict):
+        raise CliError(f"config profiles must be an object: {path}")
+    for profile_name, profile in profiles.items():
+        if not isinstance(profile_name, str) or not profile_name:
+            raise CliError(f"config profile names must be non-empty strings: {path}")
+        if not isinstance(profile, dict):
+            raise CliError(f"config profile {profile_name!r} must be an object")
+        unknown = set(profile) - CONFIG_PROFILE_FIELDS
+        if unknown:
+            raise CliError(
+                f"config profile {profile_name!r} has unsupported fields: {', '.join(sorted(unknown))}; "
+                "API keys must remain in environment variables or token files"
+            )
+    default_profile = value.get("default_profile")
+    if default_profile is not None and (not isinstance(default_profile, str) or not default_profile):
+        raise CliError(f"config default_profile must be a non-empty string: {path}")
+    return value
+
+
+def validate_profile_name(value: str) -> str:
+    if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]{0,63}", value):
+        raise CliError("--profile must use 1..64 letters, digits, dots, underscores, or hyphens")
+    return value
+
+
+def positive_int(value: Any, label: str) -> int:
+    if isinstance(value, bool):
+        raise CliError(f"{label} must be a positive integer")
+    try:
+        parsed = int(value)
+    except (TypeError, ValueError) as exc:
+        raise CliError(f"{label} must be a positive integer") from exc
+    if parsed < 1:
+        raise CliError(f"{label} must be a positive integer")
+    return parsed
+
+
+def resolve_runtime_config(args: argparse.Namespace, env_sources: dict[str, str]) -> dict[str, Any]:
+    env_config_file, env_config_source = first_env_with_source(("IMAGE_API_CONFIG_FILE",), env_sources)
+    if args.config_file:
+        config_path = Path(args.config_file).expanduser()
+        config_file_source = "cli:--config-file"
+    elif env_config_file:
+        config_path = Path(env_config_file).expanduser()
+        config_file_source = env_config_source
+    else:
+        config_path = DEFAULT_CONFIG_FILE
+        config_file_source = "built-in-default"
+
+    config = load_config_file(config_path)
+    env_profile, env_profile_source = first_env_with_source(("IMAGE_API_PROFILE",), env_sources)
+    if args.profile:
+        profile_name = validate_profile_name(args.profile)
+        profile_source = "cli:--profile"
+    elif env_profile:
+        profile_name = validate_profile_name(env_profile)
+        profile_source = env_profile_source
+    elif config.get("default_profile"):
+        profile_name = validate_profile_name(str(config["default_profile"]))
+        profile_source = f"config:{config_path}#default_profile"
+    else:
+        profile_name = "default"
+        profile_source = "built-in-default"
+    profile = config.get("profiles", {}).get(profile_name, {})
+    if not isinstance(profile, dict):
+        raise CliError(f"config profile {profile_name!r} must be an object")
+
+    def resolve_value(
+        cli_value: Any,
+        cli_name: str,
+        env_names: tuple[str, ...],
+        profile_field: str,
+        fallback: Any,
+    ) -> tuple[Any, str]:
+        if cli_value is not None:
+            return cli_value, f"cli:{cli_name}"
+        env_value, env_source = first_env_with_source(env_names, env_sources, process_only=True)
+        if env_value:
+            return env_value, env_source
+        if profile_field in profile:
+            return profile[profile_field], f"config:{config_path}#profiles.{profile_name}.{profile_field}"
+        env_value, env_source = first_env_with_source(env_names, env_sources, process_only=False)
+        if env_value:
+            return env_value, env_source
+        return fallback, "built-in-default"
+
+    base_url, base_url_source = resolve_value(
+        args.base_url,
+        "--base-url",
+        (CANONICAL_BASE_URL_ENV,),
+        "base_url",
+        DEFAULT_BASE_URL,
+    )
+    model, model_source = resolve_value(
+        args.model,
+        "--model",
+        ("IMAGE_API_MODEL",),
+        "model",
+        DEFAULT_MODEL,
+    )
+    timeout, timeout_source = resolve_value(
+        args.timeout_seconds,
+        "--timeout-seconds",
+        ("IMAGE_API_TIMEOUT_SECONDS",),
+        "timeout_seconds",
+        DEFAULT_TIMEOUT_SECONDS,
+    )
+    default_token_file = str(DEFAULT_TOKEN_FILE) if DEFAULT_TOKEN_FILE.exists() else ""
+    token_file, token_file_source = resolve_value(
+        args.token_file,
+        "--token-file",
+        (CANONICAL_TOKEN_FILE_ENV,),
+        "token_file",
+        default_token_file,
+    )
+
+    args.base_url = str(base_url)
+    args.model = str(model)
+    args.timeout_seconds = positive_int(timeout, "timeout_seconds")
+    args.token_file = str(token_file) if token_file else ""
+    context = {
+        "config_file": str(config_path),
+        "config_file_exists": config_path.exists(),
+        "config_file_source": config_file_source,
+        "profile": profile_name,
+        "profile_source": profile_source,
+        "profile_exists": profile_name in config.get("profiles", {}),
+        "sources": {
+            "base_url": base_url_source,
+            "model": model_source,
+            "timeout_seconds": timeout_source,
+            "token_file": token_file_source,
+        },
+        "_config": config,
+        "_config_path": config_path,
+    }
+    args.config_context = context
+    return context
+
+
+def write_config_file(path: Path, value: dict[str, Any]) -> None:
+    if path.exists() and (not path.is_file() or path.is_symlink()):
+        raise CliError(f"refusing non-regular config path: {path}")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_name(f".{path.name}.{uuid.uuid4().hex}.tmp")
+    flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL
+    descriptor = os.open(temporary, flags, 0o600)
+    try:
+        with os.fdopen(descriptor, "w", encoding="utf-8") as handle:
+            json.dump(value, handle, ensure_ascii=False, indent=2)
+            handle.write("\n")
+        os.replace(temporary, path)
+        path.chmod(0o600)
+    except BaseException:
+        temporary.unlink(missing_ok=True)
+        raise
+
+
+def configure_profile(args: argparse.Namespace) -> None:
+    context = args.config_context
+    validate_endpoint_url(args.base_url.strip().rstrip("/"))
+    if not args.model.strip():
+        raise CliError("--model must not be empty")
+    config = dict(context["_config"])
+    profiles = dict(config.get("profiles", {}))
+    profile: dict[str, Any] = {
+        "base_url": args.base_url,
+        "model": args.model,
+        "timeout_seconds": args.timeout_seconds,
+    }
+    if args.token_file:
+        profile["token_file"] = args.token_file
+    profiles[context["profile"]] = profile
+    config.update(
+        {
+            "version": CONFIG_VERSION,
+            "default_profile": context["profile"],
+            "profiles": profiles,
+        }
+    )
+    write_config_file(context["_config_path"], config)
+    print_json(
+        {
+            "ok": True,
+            "configured": True,
+            "config_file": str(context["_config_path"]),
+            "profile": context["profile"],
+            "default_profile": context["profile"],
+            "saved_fields": sorted(profile),
+            "secrets_persisted": False,
+        }
+    )
+
+
+def credential_status(args: argparse.Namespace, env_sources: dict[str, str]) -> dict[str, Any]:
+    _, source = first_env_with_source(
+        (CANONICAL_API_KEY_ENV,),
+        env_sources,
+    )
+    if source:
+        return {"available": True, "source": source, "secret_exposed": False}
+    if not args.token_file:
+        return {"available": False, "source": "none", "secret_exposed": False}
+    path = Path(args.token_file).expanduser()
+    mode = stat.S_IMODE(path.stat().st_mode) if path.exists() and path.is_file() else None
+    return {
+        "available": bool(path.exists() and path.is_file() and path.stat().st_size > 0),
+        "source": f"token-file:{path}",
+        "mode": oct(mode) if mode is not None else None,
+        "permissions_secure": bool(mode is not None and not mode & 0o077),
+        "secret_exposed": False,
+    }
+
+
+def public_config_context(context: dict[str, Any]) -> dict[str, Any]:
+    return {key: value for key, value in context.items() if not key.startswith("_")}
+
+
+def show_config(args: argparse.Namespace, env_sources: dict[str, str]) -> None:
+    context = public_config_context(args.config_context)
+    print_json(
+        {
+            "ok": True,
+            **context,
+            "values": {
+                "base_url": args.base_url,
+                "model": args.model,
+                "timeout_seconds": args.timeout_seconds,
+                "token_file": args.token_file or None,
+            },
+            "generation_endpoint": endpoint_from_base_url(args.base_url, "generation"),
+            "edit_endpoint": endpoint_from_base_url(args.base_url, "edit"),
+            "models_endpoint": models_endpoint(args.base_url),
+            "credential": credential_status(args, env_sources),
+            "notes": [
+                "API keys are never read from or written to the profile config file.",
+                "An intermediary gateway can return 524 before the client timeout is reached.",
+            ],
+        }
+    )
 
 
 def resolve_model_profile(model: str) -> tuple[dict[str, Any] | None, list[str]]:
@@ -374,7 +645,13 @@ def validate_args(args: argparse.Namespace) -> tuple[str, dict[str, Any] | None,
         args.mode = "edit" if args.input_image or args.mask else "generation"
     args.size = resolve_size(args.size)
 
-    if args.list_size_presets or args.list_model_profiles or args.list_remote_models:
+    if (
+        args.configure
+        or args.show_config
+        or args.list_size_presets
+        or args.list_model_profiles
+        or args.list_remote_models
+    ):
         return "", None, warnings
     if bool(args.prompt) == bool(args.prompt_file):
         raise CliError("use exactly one of --prompt or --prompt-file")
@@ -484,7 +761,7 @@ def validate_endpoint_url(value: str) -> None:
 
 
 def read_api_key(args: argparse.Namespace) -> str:
-    key = first_env("IMAGE_API_KEY", "NEWAPI_API_KEY", "NEW_API_KEY", "OPENAI_API_KEY")
+    key = first_env(CANONICAL_API_KEY_ENV)
     if key:
         return key.strip()
     if not args.token_file:
@@ -594,13 +871,101 @@ def request_multipart(
 
 
 def open_request(request: Request, timeout: int) -> Any:
+    started = time.monotonic()
     try:
         return urlopen(request, timeout=timeout)
     except urllib.error.HTTPError as exc:
+        elapsed_ms = round((time.monotonic() - started) * 1000)
         detail = exc.read(2000).decode("utf-8", errors="replace")
-        raise CliError(f"image API HTTP {exc.code}: {detail}") from exc
+        headers = safe_response_headers(exc.headers)
+        details: dict[str, Any] = {
+            "error_type": classify_http_error(exc.code),
+            "http_status": exc.code,
+            "elapsed_ms": elapsed_ms,
+            "client_timeout_seconds": timeout,
+            "request_url": request.full_url,
+            "response_headers": headers,
+        }
+        message = f"image API HTTP {exc.code}: {detail}"
+        if exc.code == 524:
+            details["diagnosis"] = (
+                "An intermediary gateway stopped waiting for the image upstream before the client timeout elapsed."
+            )
+            details["recommended_actions"] = [
+                "Run --show-config and verify the selected endpoint, model, timeout, and configuration sources.",
+                "Check the configured gateway's image channel, upstream latency, and proxy timeout.",
+                "Retry one small request only after confirming the previous job did not complete upstream.",
+                "Use another configured profile or direct endpoint if the gateway cannot support long image requests.",
+            ]
+            message = (
+                f"image API HTTP 524 after {elapsed_ms} ms; the configured gateway timed out while waiting "
+                f"for its image upstream (client timeout: {timeout}s)"
+            )
+        raise CliError(message, details=details) from exc
+    except (TimeoutError, socket.timeout) as exc:
+        elapsed_ms = round((time.monotonic() - started) * 1000)
+        raise CliError(
+            f"image API client timeout after {elapsed_ms} ms",
+            details={
+                "error_type": "client_timeout",
+                "elapsed_ms": elapsed_ms,
+                "client_timeout_seconds": timeout,
+                "request_url": request.full_url,
+            },
+        ) from exc
     except urllib.error.URLError as exc:
-        raise CliError(f"image API connection failed: {exc.reason}") from exc
+        elapsed_ms = round((time.monotonic() - started) * 1000)
+        if isinstance(exc.reason, (TimeoutError, socket.timeout)):
+            raise CliError(
+                f"image API client timeout after {elapsed_ms} ms",
+                details={
+                    "error_type": "client_timeout",
+                    "elapsed_ms": elapsed_ms,
+                    "client_timeout_seconds": timeout,
+                    "request_url": request.full_url,
+                },
+            ) from exc
+        raise CliError(
+            f"image API connection failed: {exc.reason}",
+            details={
+                "error_type": "connection_error",
+                "elapsed_ms": elapsed_ms,
+                "client_timeout_seconds": timeout,
+                "request_url": request.full_url,
+            },
+        ) from exc
+
+
+def classify_http_error(status: int) -> str:
+    if status in {401, 403}:
+        return "authentication_or_authorization"
+    if status == 404:
+        return "route_or_model_mismatch"
+    if status in {408, 524}:
+        return "gateway_or_upstream_timeout"
+    if status == 413:
+        return "request_too_large"
+    if status == 429:
+        return "rate_limit_or_capacity"
+    if status in {502, 503, 504}:
+        return "gateway_or_upstream_unavailable"
+    return "http_error"
+
+
+def safe_response_headers(headers: Any) -> dict[str, str]:
+    allowed = {
+        "cf-ray",
+        "date",
+        "retry-after",
+        "server",
+        "x-request-id",
+        "x-trace-id",
+    }
+    return {
+        str(key).lower(): str(value)
+        for key, value in headers.items()
+        if str(key).lower() in allowed
+    }
 
 
 def read_json_response(response: BinaryIO) -> dict[str, Any]:
@@ -888,9 +1253,16 @@ def print_json(value: dict[str, Any]) -> None:
 
 
 def main() -> int:
-    load_env_defaults()
+    env_sources = load_env_defaults()
     parser = build_parser()
     args = parser.parse_args()
+    resolve_runtime_config(args, env_sources)
+    if args.configure:
+        configure_profile(args)
+        return 0
+    if args.show_config:
+        show_config(args, env_sources)
+        return 0
     if args.list_size_presets:
         print_json({"ok": True, "presets": SIZE_PRESETS})
         return 0
@@ -921,6 +1293,7 @@ def main() -> int:
                 "endpoint": endpoint,
                 "payload": safe_payload(payload),
                 "model_profile": profile,
+                "configuration": public_config_context(args.config_context),
                 "warnings": warnings,
                 "input_images": input_metadata,
                 "mask": mask_metadata,
@@ -959,6 +1332,7 @@ def main() -> int:
         "endpoint": endpoint,
         "model": args.model,
         "model_profile": profile,
+        "configuration": public_config_context(args.config_context),
         "requested_size": args.size,
         "quality": args.quality,
         "n": args.n,
@@ -1003,7 +1377,7 @@ if __name__ == "__main__":
     try:
         raise SystemExit(main())
     except CliError as exc:
-        print_json({"ok": False, "error": str(exc)})
+        print_json({"ok": False, "error": str(exc), **exc.details})
         raise SystemExit(2)
     except KeyboardInterrupt:
         print_json({"ok": False, "error": "interrupted"})
