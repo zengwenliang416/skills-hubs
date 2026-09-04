@@ -74,7 +74,6 @@ Create a named gateway profile:
 
 ```bash
 image-api-workbench \
-  --profile pftrader \
   --base-url https://gateway.example.com/v1 \
   --model gpt-image-2 \
   --timeout-seconds 1200 \
@@ -88,7 +87,7 @@ written atomically with `0600` permissions and may contain only `base_url`,
 Inspect the final effective configuration before diagnosing a gateway:
 
 ```bash
-image-api-workbench --profile pftrader --show-config
+image-api-workbench --show-config
 ```
 
 The output reports the selected profile, generation/edit/models endpoints,
