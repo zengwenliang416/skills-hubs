@@ -3,12 +3,14 @@
 ## Request Sequence
 
 1. Confirm prompt, output path, and intended aspect ratio.
-2. Run `--list-model-profiles` when a model is unfamiliar.
-3. Run `--list-remote-models` when gateway availability matters.
-4. Run the exact parameter combination with `--dry-run`.
-5. Obtain user approval before a paid compatibility probe.
-6. Run the real request.
-7. Inspect stdout, final image, metadata, and any partial images.
+2. Run `--show-config` and verify the profile, endpoint, model, timeout, and
+   field sources.
+3. Run `--list-model-profiles` when a model is unfamiliar.
+4. Run `--list-remote-models` when gateway availability matters.
+5. Run the exact parameter combination with `--dry-run`.
+6. Obtain user approval before a paid compatibility probe.
+7. Run the real request.
+8. Inspect stdout, final image, metadata, and any partial images.
 
 ## Reference Editing
 
@@ -48,6 +50,9 @@ Classify that as a gateway/adapter limitation, not a prompt failure.
 - `413`: request or input-image payload is too large.
 - `429`: quota, rate limit, or capacity.
 - `502` / `503`: gateway or upstream availability.
+- `524`: an intermediary gateway stopped waiting for the image upstream before
+  the client timeout elapsed. Increasing only `--timeout-seconds` does not
+  change the gateway's proxy timeout.
 - catalog success plus request failure: endpoint compatibility is unproven.
 
 Do not respond to an availability or authentication error by rewriting the

@@ -1,8 +1,8 @@
 {
   "name": "image-api-workbench",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "owner": "Wenliang Zeng",
-  "updated_at": "2026-08-31",
+  "updated_at": "2026-09-02",
   "review_due": "2026-11-30",
   "status": "active",
   "maturity_tier": "library",

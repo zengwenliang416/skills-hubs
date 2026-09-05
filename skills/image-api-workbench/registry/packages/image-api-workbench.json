@@ -1,7 +1,7 @@
 {
   "schema_version": "2.0",
   "name": "image-api-workbench",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "Generate, edit, probe, and verify images through the OpenAI Images API or compatible gateways such as NewAPI. Use for GPT Image generation, reference-image editing, transparent PNG/WebP assets, bilingual visual localization, model catalog checks, streaming partial images, API compatibility tests, covers, social graphics, and publishing assets. Triggers on image API, GPT Image, NewAPI image, gpt-image-2, generate image, edit reference image, 生成图片, 生图, 配图, 封面图, 透明图, 图片编辑, 参考图编辑, 双语图片, 模型可用性. Excludes image search, visual critique, local-only bitmap editing, and requests that explicitly require the built-in image generation tool instead of an API workflow.",
   "targets": [
     "openai",
@@ -53,5 +53,5 @@
     "install_simulated": false,
     "install_simulation": "reports/install_simulation.json"
   },
-  "generated_at": "2026-08-31"
+  "generated_at": "2026-09-02"
 }

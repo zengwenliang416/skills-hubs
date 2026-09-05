@@ -1,11 +1,11 @@
 {
   "schema_version": "1.1",
-  "updated_at": "2026-09-01",
+  "updated_at": "2026-09-02",
   "skills": [
     {
       "name": "image-api-workbench",
       "title": "Image API Workbench",
-      "version": "2.0.1",
+      "version": "2.1.0",
       "path": "skills/image-api-workbench",
       "category": "media",
       "runtime": "python>=3.9",
@@ -16,7 +16,8 @@
       "tags": ["图片生成", "图片编辑", "GPT Image", "API 诊断", "产物验证"],
       "highlights": [
         "支持生成、最多 16 张参考图编辑、遮罩、透明 PNG/WebP、流式局部图和多图输出。",
-        "提供远程模型目录检查、严格参数校验和 dry-run，可在付费调用前诊断兼容网关。",
+        "提供多网关 profile 配置、最终配置来源检查、远程模型目录检查和 dry-run，可在付费调用前诊断路由。",
+        "将 HTTP 524 与客户端超时分开分类，输出网关超时层级、请求耗时和可执行排查建议。",
         "生成元数据旁车并核验实际尺寸、格式、哈希和输入来源，避免将非原生尺寸误报为原生 4K。"
       ],
       "use_cases": [

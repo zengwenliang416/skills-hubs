@@ -2,9 +2,10 @@
   "schema_version": "1.0",
   "default_policy": {
     "https_only": true,
-    "custom_hosts": "explicit-cli-or-environment-only",
+    "custom_hosts": "explicit-cli-process-environment-profile-or-dotenv-only",
     "redirects": "standard-library-default",
     "secrets": "bearer-token-from-env-or-token-file",
+    "profile_configuration": "secret-free-json-written-atomically-with-mode-0600",
     "writes": "local-output-paths-only"
   },
   "scripts": {
@@ -20,7 +21,7 @@
       ],
       "timeout_seconds": 1200,
       "auth_mode": "bearer",
-      "custom_host_behavior": "allowed only through --base-url or reviewed environment configuration"
+      "custom_host_behavior": "allowed only through --base-url, current process environment, a reviewed named profile, or legacy dotenv configuration"
     }
   }
 }

@@ -7,12 +7,12 @@
     "README.md",
     ".gitignore",
     "server",
-    "web"
+    "web",
+    "skills/image-api-workbench"
   ],
   "denied_roots": [
     ".git",
     "data",
-    "skills",
     "node_modules",
     "server/target",
     "web/node_modules",
@@ -24,7 +24,8 @@
     "server/src/main.rs",
     "server/src/store.rs",
     "server/Cargo.toml",
-    "web/package.json"
+    "web/package.json",
+    "skills/image-api-workbench"
   ],
   "allowed_operations": {
     "create": true,

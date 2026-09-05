@@ -8,33 +8,36 @@ description: Generate, edit, probe, and verify images through the OpenAI Images 
 ## Purpose
 
 Run reproducible Images API generation or editing against OpenAI or a reviewed
-compatible gateway. The CLI validates requests, catalogs, streaming partials,
-outputs, and evidence. Default to `gpt-image-2`; catalogs are route evidence,
-not endpoint proof.
+compatible gateway. The CLI manages named gateway profiles and validates
+requests, catalogs, streaming partials, outputs, and evidence. Default to
+`gpt-image-2`; catalogs are route evidence, not endpoint proof.
 
 ## Workflow
 
-1. Read [model support](references/model-support.md) before changing models or
+1. Read [model support](references/model-support.md) when changing models or
    advanced parameters.
-2. Use `scripts/image_api_workbench.py --dry-run` for every new parameter
-   combination.
-3. Use `--list-remote-models` to inspect the configured gateway without
-   spending image credits.
+2. Use `--show-config` for gateway diagnosis. Configure a named profile only
+   when a route needs to be persisted; never put an API key in profile JSON.
+3. Use `--dry-run` for new or uncertain parameter combinations, and
+   `--list-remote-models` only when catalog discovery is needed.
 4. Generate with `/v1/images/generations`; add `--input-image` to switch to
-   `/v1/images/edits`.
-5. Use `--background transparent --output-format png` or `webp` for alpha.
-6. Use `--stream --partial-images 1..3` only when the gateway relays image SSE.
-7. Save assets outside this skill and inspect the image plus metadata sidecar.
+   `/v1/images/edits`. Use transparent PNG/WebP or streaming flags when the
+   selected endpoint supports them.
+5. Save assets outside this skill and inspect the image plus metadata sidecar.
 
 ## Safety Defaults
 
-- `gpt-image-1.5`, `gpt-image-1-mini`, and `chatgpt-image-latest` require
-  `--allow-deprecated-model`; all are scheduled to shut down on 2026-12-01.
+- Deprecated or retired models require an explicit allow flag; keep the current
+  model status in [model support](references/model-support.md).
 - Retired DALL-E models are blocked unless `--allow-retired-model` is explicit.
 - Known GPT Image parameters are model-validated. Provider extensions require
   `--allow-provider-extensions`.
 - Credentials come from environment variables or token files. Never persist
   keys in prompts, metadata, skill files, reports, or logs.
+- Profile files persist only endpoint, model, timeout, and token-file path.
+  They are written with `0600` permissions.
+- HTTP `524` means an intermediary gateway stopped waiting for its upstream;
+  increasing only the CLI timeout does not extend that gateway's own limit.
 - Metadata stores a prompt hash by default. Prompt preview is opt-in.
 
 ## Editing And Localization

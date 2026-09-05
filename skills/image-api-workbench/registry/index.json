@@ -1,11 +1,11 @@
 {
   "schema_version": "2.0",
-  "generated_at": "2026-08-31",
+  "generated_at": "2026-09-02",
   "package_count": 1,
   "packages": [
     {
       "name": "image-api-workbench",
-      "version": "2.0.1",
+      "version": "2.1.0",
       "maturity": "library",
       "owner": "Wenliang Zeng",
       "targets": [
