@@ -40,7 +40,7 @@ Generate a transparent image:
 ```bash
 image-api-workbench \
   --prompt "A transparent editorial icon of an AI accelerator, no text" \
-  --model gpt-image-2 \
+  --model gpt-image-2.5-sunburst \
   --background transparent \
   --output-format png \
   --out ./artifacts/icon.png
@@ -75,7 +75,7 @@ Create a named gateway profile:
 ```bash
 image-api-workbench \
   --base-url https://gateway.example.com/v1 \
-  --model gpt-image-2 \
+  --model gpt-image-2.5-sunburst \
   --timeout-seconds 1200 \
   --configure
 ```
@@ -130,9 +130,9 @@ put keys in prompts, shell history, skill files, reports, metadata, or memory.
 --mode generation|edit
 --input-image PATH              Repeatable, maximum 16
 --mask PATH
---model MODEL                   Default: gpt-image-2
+--model MODEL                   Default: gpt-image-2.5-sunburst
 --size auto|WIDTHxHEIGHT|preset
---quality auto|low|medium|high
+--quality auto|low|medium|high|xhigh|max
 --n 1..10
 --background auto|opaque|transparent
 --output-format png|jpeg|webp
@@ -157,6 +157,10 @@ put keys in prompts, shell history, skill files, reports, metadata, or memory.
 Known-model validation is strict by default. Use
 `--allow-provider-extensions` only after checking the target gateway's
 documentation and exact endpoint behavior.
+
+Use `gpt-image-2.5-sunburst` for the most capable generation and precise
+editing. Use `gpt-image-2.5-flare` for faster high-quality generation. The
+two GPT Image 2.5 models both accept `xhigh` and `max`.
 
 ## HTTP 524 Diagnosis
 
@@ -195,6 +199,13 @@ mkdir -p ~/.codex/skills
 cp -R "$(npm root --global)/image-api-workbench" \
   ~/.codex/skills/image-api-workbench
 ```
+
+## WorkBuddy Handoff
+
+This is also a standard `SKILL.md` directory package for WorkBuddy. Read
+[WORKBUDDY.md](WORKBUDDY.md) for folder/ZIP import paths, Python requirements,
+recipient-side API configuration, and a safe dry-run. Never include an API key
+when sharing this Skill.
 
 ## Verification
 

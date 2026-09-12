@@ -1,8 +1,8 @@
 {
   "schema_version": "2.0",
   "name": "image-api-workbench",
-  "version": "2.1.0",
-  "description": "Generate, edit, probe, and verify images through the OpenAI Images API or compatible gateways such as NewAPI. Use for GPT Image generation, reference-image editing, transparent PNG/WebP assets, bilingual visual localization, model catalog checks, streaming partial images, API compatibility tests, covers, social graphics, and publishing assets. Triggers on image API, GPT Image, NewAPI image, gpt-image-2, generate image, edit reference image, 生成图片, 生图, 配图, 封面图, 透明图, 图片编辑, 参考图编辑, 双语图片, 模型可用性. Excludes image search, visual critique, local-only bitmap editing, and requests that explicitly require the built-in image generation tool instead of an API workflow.",
+  "version": "2.2.0",
+  "description": "Generate, edit, probe, and verify images through the OpenAI Images API or compatible gateways such as NewAPI. Use for GPT Image 2.5 Sunburst or Flare generation, reference-image editing, transparent assets, model and parameter compatibility checks, streaming partials, covers, social graphics, and bilingual visual localization. Triggers on image API, GPT Image, gpt-image-2.5, NewAPI image, generate image, edit reference image, 生成图片, 生图, 配图, 封面图, 透明图, 图片编辑, 参考图编辑, 双语图片, 模型可用性. Excludes image search, visual critique, local-only bitmap editing, and requests that explicitly require the built-in image generation tool instead of an API workflow.",
   "targets": [
     "openai",
     "claude",
@@ -15,10 +15,6 @@
   "review_cadence": "quarterly",
   "trust_level": "local",
   "license": "Copyright (c) 2026 Wenliang Zeng. All rights reserved.",
-  "checksums": {
-    "package_sha256": "8385e105b55833231e4136ee3dec22c804594ff8d2cc6a0b0619f6c295e5c2ed",
-    "archive_sha256": "05ac73e3010eb25a5c42cf4bb65e1afa537a2a47e328c839f8eeab178c8033b8"
-  },
   "compatibility": {
     "openai": "pass",
     "claude": "pass",
@@ -47,11 +43,10 @@
     "package_metadata": "registry/packages/image-api-workbench.json"
   },
   "distribution": {
-    "archive_verified": true,
-    "archive_sha256": "05ac73e3010eb25a5c42cf4bb65e1afa537a2a47e328c839f8eeab178c8033b8",
+    "archive_verified": false,
     "package_verification": "reports/package_verification.json",
     "install_simulated": false,
     "install_simulation": "reports/install_simulation.json"
   },
-  "generated_at": "2026-09-02"
+  "generated_at": "2026-09-09"
 }

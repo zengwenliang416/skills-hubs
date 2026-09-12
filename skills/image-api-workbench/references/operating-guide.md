@@ -39,7 +39,8 @@ system, or simplify the illustration.
 `--stream` requests SSE from the Images API. `--partial-images` must be `0..3`.
 Partial assets are saved under `--partial-dir` or beside the final output.
 
-Compatible gateways may list `gpt-image-2` but fail to relay partial events.
+Compatible gateways may list GPT Image 2.5 models but fail to relay partial
+events.
 Classify that as a gateway/adapter limitation, not a prompt failure.
 
 ## Error Classification

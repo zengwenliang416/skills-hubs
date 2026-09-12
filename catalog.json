@@ -1,11 +1,11 @@
 {
   "schema_version": "1.1",
-  "updated_at": "2026-09-02",
+  "updated_at": "2026-09-09",
   "skills": [
     {
       "name": "image-api-workbench",
       "title": "Image API Workbench",
-      "version": "2.1.0",
+      "version": "2.2.0",
       "path": "skills/image-api-workbench",
       "category": "media",
       "runtime": "python>=3.9",

@@ -46,7 +46,16 @@ class ApiHandler(BaseHTTPRequestHandler):
             self.send_header("Content-Type", "application/json")
             self.end_headers()
             self.wfile.write(
-                json.dumps({"data": [{"id": "gpt-image-2"}, {"id": "text-model"}]}).encode()
+                json.dumps(
+                    {
+                        "data": [
+                            {"id": "gpt-image-2.5-flare"},
+                            {"id": "gpt-image-2.5-sunburst"},
+                            {"id": "gpt-image-2"},
+                            {"id": "text-model"},
+                        ]
+                    }
+                ).encode()
             )
             return
         self.send_error(404)
@@ -300,20 +309,25 @@ class ImageApiWorkbenchTests(unittest.TestCase):
         self.assertIn("intermediary gateway", payload["diagnosis"])
         self.assertEqual(payload["response_headers"]["cf-ray"], "test-ray")
 
-    def test_gpt_image_2_transparency_is_allowed(self) -> None:
-        result = run_cli(
-            [
-                "--prompt",
-                "transparent test",
-                "--out",
-                "/tmp/image-api-workbench-transparent.png",
-                "--background",
-                "transparent",
-                "--dry-run",
-            ]
-        )
+    def test_default_model_is_sunburst_and_allows_transparency(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            result = run_cli(
+                [
+                    "--config-file",
+                    str(Path(tmp) / "missing-config.json"),
+                    "--prompt",
+                    "transparent test",
+                    "--out",
+                    str(Path(tmp) / "transparent.png"),
+                    "--background",
+                    "transparent",
+                    "--dry-run",
+                ]
+            )
         self.assertEqual(result.returncode, 0, result.stderr + result.stdout)
-        self.assertTrue(json.loads(result.stdout)["ok"])
+        payload = json.loads(result.stdout)
+        self.assertTrue(payload["ok"])
+        self.assertEqual(payload["payload"]["model"], "gpt-image-2.5-sunburst")
 
     def test_deprecated_model_requires_explicit_override(self) -> None:
         result = run_cli(
@@ -345,6 +359,21 @@ class ImageApiWorkbenchTests(unittest.TestCase):
         self.assertEqual(result.returncode, 2)
         self.assertIn("2026-12-01", result.stdout)
 
+    def test_gpt_image_1_deprecation_is_enforced(self) -> None:
+        result = run_cli(
+            [
+                "--prompt",
+                "deprecated model test",
+                "--model",
+                "gpt-image-1",
+                "--out",
+                "/tmp/image-api-workbench-gpt-image-1.png",
+                "--dry-run",
+            ]
+        )
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("2026-10-23", result.stdout)
+
     def test_invalid_gpt_image_2_size_is_rejected(self) -> None:
         result = run_cli(
             [
@@ -375,6 +404,91 @@ class ImageApiWorkbenchTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stdout)
         self.assertEqual(json.loads(result.stdout)["payload"]["size"], "3840x1648")
 
+    def test_sunburst_accepts_4k_and_xhigh_quality(self) -> None:
+        result = run_cli(
+            [
+                "--prompt",
+                "quality test",
+                "--model",
+                "gpt-image-2.5-sunburst",
+                "--size",
+                "3840x2160",
+                "--quality",
+                "xhigh",
+                "--out",
+                "/tmp/image-api-workbench-sunburst.png",
+                "--dry-run",
+            ]
+        )
+        self.assertEqual(result.returncode, 0, result.stdout)
+        self.assertEqual(json.loads(result.stdout)["payload"]["quality"], "xhigh")
+
+    def test_flare_accepts_max_and_xhigh_quality(self) -> None:
+        max_result = run_cli(
+            [
+                "--prompt",
+                "quality test",
+                "--model",
+                "gpt-image-2.5-flare",
+                "--quality",
+                "max",
+                "--out",
+                "/tmp/image-api-workbench-flare-max.png",
+                "--dry-run",
+            ]
+        )
+        xhigh_result = run_cli(
+            [
+                "--prompt",
+                "quality test",
+                "--model",
+                "gpt-image-2.5-flare",
+                "--quality",
+                "xhigh",
+                "--out",
+                "/tmp/image-api-workbench-flare-xhigh.png",
+                "--dry-run",
+            ]
+        )
+        self.assertEqual(max_result.returncode, 0, max_result.stdout)
+        self.assertEqual(xhigh_result.returncode, 0, xhigh_result.stdout)
+
+    def test_2_5_rejects_edge_above_3840(self) -> None:
+        result = run_cli(
+            [
+                "--prompt",
+                "size test",
+                "--model",
+                "gpt-image-2.5-sunburst",
+                "--size",
+                "4096x1920",
+                "--out",
+                "/tmp/image-api-workbench-oversize.png",
+                "--dry-run",
+            ]
+        )
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("512..3840", result.stdout)
+
+    def test_2_5_snapshot_prefix_uses_flare_profile(self) -> None:
+        result = run_cli(
+            [
+                "--prompt",
+                "snapshot test",
+                "--model",
+                "gpt-image-2.5-flare-2026-09-08",
+                "--quality",
+                "max",
+                "--out",
+                "/tmp/image-api-workbench-flare-snapshot.png",
+                "--dry-run",
+            ]
+        )
+        self.assertEqual(result.returncode, 0, result.stdout)
+        profile = json.loads(result.stdout)["model_profile"]
+        self.assertEqual(profile["family"], "gpt-image-2.5-flare")
+        self.assertEqual(profile["snapshot"], "gpt-image-2.5-flare-2026-09-08")
+
     def test_gpt_image_2_input_fidelity_flag_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             source = Path(tmp) / "source.png"
@@ -385,6 +499,8 @@ class ImageApiWorkbenchTests(unittest.TestCase):
                     str(source),
                     "--prompt",
                     "edit",
+                    "--model",
+                    "gpt-image-2",
                     "--input-fidelity",
                     "high",
                     "--out",
@@ -395,6 +511,28 @@ class ImageApiWorkbenchTests(unittest.TestCase):
         self.assertEqual(result.returncode, 2)
         self.assertIn("always uses high input fidelity", result.stdout)
 
+    def test_sunburst_edit_accepts_high_input_fidelity(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            source = Path(tmp) / "source.png"
+            source.write_bytes(png_bytes())
+            result = run_cli(
+                [
+                    "--input-image",
+                    str(source),
+                    "--prompt",
+                    "edit",
+                    "--model",
+                    "gpt-image-2.5-sunburst",
+                    "--input-fidelity",
+                    "high",
+                    "--out",
+                    str(Path(tmp) / "out.png"),
+                    "--dry-run",
+                ]
+            )
+        self.assertEqual(result.returncode, 0, result.stdout)
+        self.assertEqual(json.loads(result.stdout)["payload"]["input_fidelity"], "high")
+
     def test_remote_model_catalog_is_catalog_only(self) -> None:
         with Server() as base_url:
             result = run_cli(
@@ -403,7 +541,10 @@ class ImageApiWorkbenchTests(unittest.TestCase):
             )
         self.assertEqual(result.returncode, 0, result.stdout)
         payload = json.loads(result.stdout)
-        self.assertEqual(payload["image_model_candidates"], ["gpt-image-2"])
+        self.assertEqual(
+            payload["image_model_candidates"],
+            ["gpt-image-2", "gpt-image-2.5-flare", "gpt-image-2.5-sunburst"],
+        )
         self.assertIn("catalog-only", payload["evidence_boundary"])
 
     def test_nonstream_saves_every_requested_output_without_prompt_preview(self) -> None:

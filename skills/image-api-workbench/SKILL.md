@@ -1,6 +1,6 @@
 ---
 name: image-api-workbench
-description: Generate, edit, probe, and verify images through the OpenAI Images API or compatible gateways such as NewAPI. Use for GPT Image generation, reference-image editing, transparent PNG/WebP assets, bilingual visual localization, model catalog checks, streaming partial images, API compatibility tests, covers, social graphics, and publishing assets. Triggers on image API, GPT Image, NewAPI image, gpt-image-2, generate image, edit reference image, 生成图片, 生图, 配图, 封面图, 透明图, 图片编辑, 参考图编辑, 双语图片, 模型可用性. Excludes image search, visual critique, local-only bitmap editing, and requests that explicitly require the built-in image generation tool instead of an API workflow.
+description: Generate, edit, probe, and verify images through the OpenAI Images API or compatible gateways such as NewAPI. Use for GPT Image 2.5 Sunburst or Flare generation, reference-image editing, transparent assets, model and parameter compatibility checks, streaming partials, covers, social graphics, and bilingual visual localization. Triggers on image API, GPT Image, gpt-image-2.5, NewAPI image, generate image, edit reference image, 生成图片, 生图, 配图, 封面图, 透明图, 图片编辑, 参考图编辑, 双语图片, 模型可用性. Excludes image search, visual critique, local-only bitmap editing, and requests that explicitly require the built-in image generation tool instead of an API workflow.
 ---
 
 # Image API Workbench
@@ -10,7 +10,9 @@ description: Generate, edit, probe, and verify images through the OpenAI Images 
 Run reproducible Images API generation or editing against OpenAI or a reviewed
 compatible gateway. The CLI manages named gateway profiles and validates
 requests, catalogs, streaming partials, outputs, and evidence. Default to
-`gpt-image-2`; catalogs are route evidence, not endpoint proof.
+`gpt-image-2.5-sunburst`; choose `gpt-image-2.5-flare` when generation speed
+and throughput matter more than maximum edit precision. Catalogs are route
+evidence, not endpoint proof.
 
 ## Workflow
 
@@ -24,6 +26,9 @@ requests, catalogs, streaming partials, outputs, and evidence. Default to
    `/v1/images/edits`. Use transparent PNG/WebP or streaming flags when the
    selected endpoint supports them.
 5. Save assets outside this skill and inspect the image plus metadata sidecar.
+
+Both GPT Image 2.5 models accept `xhigh` and `max` quality. Keep `gpt-image-2`
+only when an existing route explicitly requires it.
 
 ## Safety Defaults
 

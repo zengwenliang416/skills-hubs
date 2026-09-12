@@ -22,12 +22,12 @@ from urllib.parse import urlparse
 from urllib.request import Request, urlopen
 
 
-VERSION = "2.1.0"
+VERSION = "2.2.0"
 SCRIPT_INTERFACE = "cli"
 DEFAULT_BASE_URL = "http://127.0.0.1:3000/v1"
 DEFAULT_TOKEN_FILE = Path("/root/.openclaw/new-api.token")
 DEFAULT_CONFIG_FILE = Path.home() / ".config/image-api-workbench/config.json"
-DEFAULT_MODEL = "gpt-image-2"
+DEFAULT_MODEL = "gpt-image-2.5-sunburst"
 DEFAULT_TIMEOUT_SECONDS = 1200
 CONFIG_VERSION = 1
 CONFIG_ROOT_FIELDS = {"version", "default_profile", "profiles"}
@@ -69,70 +69,102 @@ SIZE_PRESETS = {
 }
 
 MODEL_PROFILES = {
-    "gpt-image-2": {
-        "family": "gpt-image-2",
+    "gpt-image-2.5-sunburst": {
+        "family": "gpt-image-2.5-sunburst",
         "status": "current",
+        "recommended_for": "precise generation and editing",
         "supports_transparency": True,
         "supports_streaming": True,
         "supports_flexible_size": True,
+        "supported_qualities": ("auto", "low", "medium", "high", "xhigh", "max"),
+        "input_fidelity": "low-or-high",
+        "max_edge": 3840,
+    },
+    "gpt-image-2.5-flare": {
+        "family": "gpt-image-2.5-flare",
+        "status": "current",
+        "recommended_for": "fast high-quality generation",
+        "supports_transparency": True,
+        "supports_streaming": True,
+        "supports_flexible_size": True,
+        "supported_qualities": ("auto", "low", "medium", "high", "xhigh", "max"),
+        "input_fidelity": "low-or-high",
+        "max_edge": 3840,
+    },
+    "gpt-image-2": {
+        "family": "gpt-image-2",
+        "status": "older",
+        "supports_transparency": True,
+        "supports_streaming": True,
+        "supports_flexible_size": True,
+        "supported_qualities": ("auto", "low", "medium", "high"),
         "input_fidelity": "always-high",
+        "max_edge": 3840,
     },
     "gpt-image-1.5": {
         "family": "gpt-image-1.5",
         "status": "deprecated",
         "shutdown": "2026-12-01",
-        "replacement": "gpt-image-2",
+        "replacement": "gpt-image-2.5-sunburst",
         "supports_transparency": True,
         "supports_streaming": False,
         "supports_flexible_size": False,
+        "supported_qualities": ("auto", "low", "medium", "high"),
         "input_fidelity": "low-or-high",
     },
     "chatgpt-image-latest": {
         "family": "chatgpt-image-latest",
         "status": "deprecated",
         "shutdown": "2026-12-01",
-        "replacement": "gpt-image-2",
+        "replacement": "gpt-image-2.5-sunburst",
         "supports_transparency": True,
         "supports_streaming": False,
         "supports_flexible_size": False,
+        "supported_qualities": ("auto", "low", "medium", "high"),
         "input_fidelity": "provider-defined",
     },
     "gpt-image-1": {
         "family": "gpt-image-1",
-        "status": "older",
+        "status": "deprecated",
+        "shutdown": "2026-10-23",
+        "replacement": "gpt-image-2.5-sunburst",
         "supports_transparency": True,
         "supports_streaming": False,
         "supports_flexible_size": False,
+        "supported_qualities": ("auto", "low", "medium", "high"),
         "input_fidelity": "low-or-high",
     },
     "gpt-image-1-mini": {
         "family": "gpt-image-1-mini",
         "status": "deprecated",
         "shutdown": "2026-12-01",
-        "replacement": "gpt-image-2",
+        "replacement": "gpt-image-2.5-sunburst",
         "supports_transparency": True,
         "supports_streaming": False,
         "supports_flexible_size": False,
+        "supported_qualities": ("auto", "low", "medium", "high"),
         "input_fidelity": "low-or-high",
     },
     "dall-e-2": {
         "family": "dall-e-2",
         "status": "retired",
         "shutdown": "2026-05-12",
-        "replacement": "gpt-image-2",
+        "replacement": "gpt-image-2.5-sunburst",
         "supports_transparency": False,
         "supports_streaming": False,
         "supports_flexible_size": False,
+        "supported_qualities": ("standard",),
         "input_fidelity": "unsupported",
     },
     "dall-e-3": {
         "family": "dall-e-3",
         "status": "retired",
         "shutdown": "2026-05-12",
-        "replacement": "gpt-image-2",
+        "replacement": "gpt-image-2.5-sunburst",
         "supports_transparency": False,
         "supports_streaming": False,
         "supports_flexible_size": False,
+        "supported_qualities": ("standard", "hd"),
         "input_fidelity": "unsupported",
     },
 }
@@ -158,7 +190,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--mask")
     parser.add_argument("--model")
     parser.add_argument("--size", default="auto")
-    parser.add_argument("--quality", choices=("auto", "low", "medium", "high"), default="auto")
+    parser.add_argument(
+        "--quality",
+        choices=("auto", "low", "medium", "high", "xhigh", "max"),
+        default="auto",
+    )
     parser.add_argument("--n", type=int, default=1)
     parser.add_argument("--background", choices=("auto", "opaque", "transparent"), default="auto")
     parser.add_argument("--output-format", choices=("png", "jpeg", "webp"), default="png")
@@ -516,8 +552,15 @@ def show_config(args: argparse.Namespace, env_sources: dict[str, str]) -> None:
 
 def resolve_model_profile(model: str) -> tuple[dict[str, Any] | None, list[str]]:
     profile = MODEL_PROFILES.get(model)
-    if profile is None and model.startswith("gpt-image-2-"):
-        profile = {**MODEL_PROFILES["gpt-image-2"], "snapshot": model}
+    if profile is None:
+        for family in (
+            "gpt-image-2.5-sunburst",
+            "gpt-image-2.5-flare",
+            "gpt-image-2",
+        ):
+            if model.startswith(f"{family}-"):
+                profile = {**MODEL_PROFILES[family], "snapshot": model}
+                break
     warnings: list[str] = []
     if profile is None:
         warnings.append("unverified-model-profile")
@@ -563,10 +606,11 @@ def validate_size(size: str, profile: dict[str, Any] | None, allow_extensions: b
         raise CliError("--size must be auto, WIDTHxHEIGHT, or a known preset")
     width, height = map(int, match.groups())
     family = profile.get("family") if profile else ""
-    if family == "gpt-image-2":
+    if profile and profile.get("supports_flexible_size", False):
         failures = []
-        if width < 512 or height < 512 or width > 3840 or height > 3840:
-            failures.append("each edge must be 512..3840")
+        max_edge = int(profile.get("max_edge", 3840))
+        if width < 512 or height < 512 or width > max_edge or height > max_edge:
+            failures.append(f"each edge must be 512..{max_edge}")
         if width % 16 or height % 16:
             failures.append("both edges must be multiples of 16")
         pixels = width * height
@@ -577,7 +621,7 @@ def validate_size(size: str, profile: dict[str, Any] | None, allow_extensions: b
             failures.append("aspect ratio must be between 1:3 and 3:1")
         if failures:
             if not allow_extensions:
-                raise CliError(f"invalid gpt-image-2 size {size}: {'; '.join(failures)}")
+                raise CliError(f"invalid {family} size {size}: {'; '.join(failures)}")
             warnings.append("provider-extension-size-validation-bypassed")
     elif profile and not profile.get("supports_flexible_size", False):
         allowed = {"1024x1024", "1536x1024", "1024x1536"}
@@ -695,12 +739,18 @@ def validate_args(args: argparse.Namespace) -> tuple[str, dict[str, Any] | None,
         if status == "retired" and not args.allow_retired_model:
             raise CliError(
                 f"{args.model} retired on {profile.get('shutdown')}; "
-                "use gpt-image-2 or explicitly pass --allow-retired-model for a reviewed provider route"
+                f"use {DEFAULT_MODEL} or explicitly pass --allow-retired-model for a reviewed provider route"
             )
         if args.stream and not profile.get("supports_streaming") and not args.allow_provider_extensions:
             raise CliError(f"{args.model} is not documented for Images API streaming")
         if args.background == "transparent" and not profile.get("supports_transparency"):
             raise CliError(f"{args.model} does not support transparent background")
+        supported_qualities = profile.get("supported_qualities", ())
+        if model_is_known_gpt(profile) and args.quality not in supported_qualities:
+            if not args.allow_provider_extensions:
+                choices = ", ".join(supported_qualities)
+                raise CliError(f"{args.model} accepts --quality values: {choices}")
+            warnings.append("provider-extension-quality-validation-bypassed")
         if args.input_fidelity and profile.get("input_fidelity") == "always-high":
             raise CliError(f"{args.model} always uses high input fidelity; omit --input-fidelity")
     if args.input_fidelity and args.mode != "edit":
